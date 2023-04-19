@@ -19,7 +19,7 @@ public class Doctor {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "specialty")
     private Specialty specialty;
 

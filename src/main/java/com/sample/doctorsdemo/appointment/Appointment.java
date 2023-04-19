@@ -29,7 +29,7 @@ public class Appointment {
     @Column(name = "time", nullable = false)
     private LocalDateTime time;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated
     @Column(name = "status", nullable = false)
     private AppointmentStatus status;
 
