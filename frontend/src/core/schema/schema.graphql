@@ -75,10 +75,8 @@ type DoctorResultPage {
 
 # Mutation root
 type Mutation {
-  deleteAppointment(id: ID!): Void
   deleteDoctor(id: ID!): Void
   deletePatient(id: ID!): Void
-  updateAppointment(input: AppointmentInput!): Appointment!
   updateDoctor(input: DoctorInput!): Doctor!
   updatePatient(input: PatientInput!): Patient!
 }
@@ -176,15 +174,6 @@ input AppointmentFilterInput {
   patientLastName: String
   timeMax: LocalDateTime
   timeMin: LocalDateTime
-}
-
-input AppointmentInput {
-  doctor: DoctorInput
-  durationMinutes: Int!
-  id: ID
-  patient: PatientInput!
-  status: AppointmentStatus
-  time: LocalDateTime!
 }
 
 input AppointmentOrderByInput {

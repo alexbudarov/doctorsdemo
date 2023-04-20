@@ -48,15 +48,6 @@ export type AppointmentFilterInput = {
   timeMin?: InputMaybe<Scalars["LocalDateTime"]>;
 };
 
-export type AppointmentInput = {
-  doctor?: InputMaybe<DoctorInput>;
-  durationMinutes: Scalars["Int"];
-  id?: InputMaybe<Scalars["ID"]>;
-  patient: PatientInput;
-  status?: InputMaybe<AppointmentStatus>;
-  time: Scalars["LocalDateTime"];
-};
-
 export type AppointmentOrderByInput = {
   direction?: InputMaybe<SortDirection>;
   property?: InputMaybe<AppointmentOrderByProperty>;
@@ -120,16 +111,10 @@ export type DoctorResultPage = {
 
 export type Mutation = {
   __typename?: "Mutation";
-  deleteAppointment?: Maybe<Scalars["Void"]>;
   deleteDoctor?: Maybe<Scalars["Void"]>;
   deletePatient?: Maybe<Scalars["Void"]>;
-  updateAppointment: Appointment;
   updateDoctor: Doctor;
   updatePatient: Patient;
-};
-
-export type MutationDeleteAppointmentArgs = {
-  id: Scalars["ID"];
 };
 
 export type MutationDeleteDoctorArgs = {
@@ -138,10 +123,6 @@ export type MutationDeleteDoctorArgs = {
 
 export type MutationDeletePatientArgs = {
   id: Scalars["ID"];
-};
-
-export type MutationUpdateAppointmentArgs = {
-  input: AppointmentInput;
 };
 
 export type MutationUpdateDoctorArgs = {

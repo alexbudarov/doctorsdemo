@@ -32,15 +32,6 @@ public class AppointmentController {
         this.crudRepository = crudRepository;
     }
 
-    @MutationMapping(name = "deleteAppointment")
-    @Transactional
-    public void delete(@GraphQLId @Argument @NonNull Long id) {
-        Appointment entity = crudRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(String.format("Unable to find entity by id: %s ", id)));
-
-        crudRepository.delete(entity);
-    }
-
     @NonNull
     @QueryMapping(name = "appointmentList")
     public ResultPage<Appointment> findAll(@Argument OffsetPageInput page, @Argument List<AppointmentOrderByInput> sort, @Argument AppointmentFilter filter) {
@@ -57,19 +48,6 @@ public class AppointmentController {
     public Appointment findById(@GraphQLId @Argument @NonNull Long id) {
         return crudRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(String.format("Unable to find entity by id: %s ", id)));
-    }
-
-    @MutationMapping(name = "updateAppointment")
-    @Transactional
-    @NonNull
-    public Appointment update(@Argument @NonNull @Valid Appointment input) {
-        if (input.getId() != null) {
-            if (!crudRepository.existsById(input.getId())) {
-                throw new RuntimeException(
-                        String.format("Unable to find entity by id: %s ", input.getId()));
-            }
-        }
-        return crudRepository.save(input);
     }
 
     protected Sort createSort(List<AppointmentOrderByInput> sortInput) {
