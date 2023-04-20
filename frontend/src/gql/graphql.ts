@@ -35,6 +35,7 @@ export type Appointment = {
   __typename?: "Appointment";
   doctor?: Maybe<Doctor>;
   durationMinutes: Scalars["Int"];
+  endTime?: Maybe<Scalars["LocalDateTime"]>;
   id?: Maybe<Scalars["ID"]>;
   patient: Patient;
   status?: Maybe<AppointmentStatus>;
@@ -58,6 +59,19 @@ export enum AppointmentOrderByProperty {
   PatientFirstName = "PATIENT_FIRST_NAME",
   Time = "TIME",
 }
+
+export type AppointmentRequestInput = {
+  doctorId: Scalars["ID"];
+  durationMinutes: Scalars["Int"];
+  patientId: Scalars["ID"];
+  time: Scalars["LocalDateTime"];
+};
+
+export type AppointmentRequestResult = {
+  __typename?: "AppointmentRequestResult";
+  appointment?: Maybe<Appointment>;
+  reserved: Scalars["Boolean"];
+};
 
 export type AppointmentResultPage = {
   __typename?: "AppointmentResultPage";
@@ -113,6 +127,7 @@ export type Mutation = {
   __typename?: "Mutation";
   deleteDoctor?: Maybe<Scalars["Void"]>;
   deletePatient?: Maybe<Scalars["Void"]>;
+  requestAppointment: AppointmentRequestResult;
   updateDoctor: Doctor;
   updatePatient: Patient;
 };
@@ -123,6 +138,10 @@ export type MutationDeleteDoctorArgs = {
 
 export type MutationDeletePatientArgs = {
   id: Scalars["ID"];
+};
+
+export type MutationRequestAppointmentArgs = {
+  request: AppointmentRequestInput;
 };
 
 export type MutationUpdateDoctorArgs = {

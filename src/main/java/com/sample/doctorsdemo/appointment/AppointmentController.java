@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,12 @@ import java.util.stream.Collectors;
 @Controller
 public class AppointmentController {
     private final AppointmentRepository crudRepository;
+    private final AppointmentService appointmentService;
 
-    public AppointmentController(AppointmentRepository crudRepository) {
+    public AppointmentController(AppointmentRepository crudRepository,
+                                 AppointmentService appointmentService) {
         this.crudRepository = crudRepository;
+        this.appointmentService = appointmentService;
     }
 
     @NonNull
@@ -162,5 +166,11 @@ public class AppointmentController {
         public void setTimeMax(LocalDateTime timeMax) {
             this.timeMax = timeMax;
         }
+    }
+
+    @MutationMapping(name = "requestAppointment")
+    @NotNull
+    public AppointmentRequestResult requestAppointment(@Argument @NotNull AppointmentRequestInput request) {
+        return appointmentService.requestAppointment(request);
     }
 }

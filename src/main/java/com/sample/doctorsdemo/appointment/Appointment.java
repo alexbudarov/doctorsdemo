@@ -37,6 +37,13 @@ public class Appointment {
     @Column(name = "duration_minutes", nullable = false)
     private int durationMinutes;
 
+    @Column(name = "end_time", nullable = false)
+    private LocalDateTime endTime;
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
     public int getDurationMinutes() {
         return durationMinutes;
     }
@@ -85,5 +92,21 @@ public class Appointment {
         this.id = id;
     }
 
+    @PrePersist
+    public void prePersist() {
+        recalculateEndTime();
+    }
 
+    @PreUpdate
+    public void preUpdate() {
+        recalculateEndTime();
+    }
+
+    private void recalculateEndTime() {
+        if (time != null) {
+            endTime = time.plusMinutes(durationMinutes);
+        } else {
+            endTime = null;
+        }
+    }
 }

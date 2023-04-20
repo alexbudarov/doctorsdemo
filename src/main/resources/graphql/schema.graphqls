@@ -56,10 +56,16 @@ directive @decimalMin(inclusive: Boolean = true, value: String!) on INPUT_FIELD_
 type Appointment {
   doctor: Doctor
   durationMinutes: Int!
+  endTime: LocalDateTime
   id: ID
   patient: Patient!
   status: AppointmentStatus
   time: LocalDateTime!
+}
+
+type AppointmentRequestResult {
+  appointment: Appointment
+  reserved: Boolean!
 }
 
 type AppointmentResultPage {
@@ -83,6 +89,7 @@ type DoctorResultPage {
 type Mutation {
   deleteDoctor(id: ID!): Void
   deletePatient(id: ID!): Void
+  requestAppointment(request: AppointmentRequestInput!): AppointmentRequestResult!
   updateDoctor(input: DoctorInput!): Doctor!
   updatePatient(input: PatientInput!): Patient!
 }
@@ -185,6 +192,13 @@ input AppointmentFilterInput {
 input AppointmentOrderByInput {
   direction: SortDirection
   property: AppointmentOrderByProperty
+}
+
+input AppointmentRequestInput {
+  doctorId: ID!
+  durationMinutes: Int!
+  patientId: ID!
+  time: LocalDateTime!
 }
 
 input DoctorFilterInput {
