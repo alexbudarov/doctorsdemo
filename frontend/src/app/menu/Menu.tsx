@@ -13,6 +13,30 @@ const menuItems: ItemType[] = [
     ),
     key: "",
     icon: <HomeOutlined />
+  },
+  {
+    label: (
+      <Link to="patient-list">
+        <FormattedMessage id="screen.PatientList" />
+      </Link>
+    ),
+    key: "patient-list"
+  },
+  {
+    label: (
+      <Link to="doctor-list">
+        <FormattedMessage id="screen.DoctorList" />
+      </Link>
+    ),
+    key: "doctor-list"
+  },
+  {
+    label: (
+      <Link to="appointment">
+        <FormattedMessage id="screen.AppointmentList" />
+      </Link>
+    ),
+    key: "appointment"
   }
 ];
 

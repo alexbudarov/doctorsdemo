@@ -103,10 +103,12 @@ type PatientResultPage {
 "Query root"
 type Query {
   appointment(id: ID!): Appointment!
-  appointmentList(page: OffsetPageInput, sort: [AppointmentOrderByInput]): AppointmentResultPage!
+  appointmentList(filter: AppointmentFilterInput, page: OffsetPageInput, sort: [AppointmentOrderByInput]): AppointmentResultPage!
   doctor(id: ID!): Doctor!
+  doctorFullList: [Doctor]!
   doctorList(filter: DoctorFilterInput, page: OffsetPageInput, sort: [DoctorOrderByInput]): DoctorResultPage!
   patient(id: ID!): Patient!
+  patientFullList: [Patient]!
   patientList(filter: PatientFilterInput, page: OffsetPageInput, sort: [PatientOrderByInput]): PatientResultPage!
   userInfo: UserInfo
 }
@@ -116,8 +118,8 @@ type UserInfo {
 }
 
 enum AppointmentOrderByProperty {
-  DOCTOR_LAST_NAME
-  PATIENT_LAST_NAME
+  DOCTOR_FIRST_NAME
+  PATIENT_FIRST_NAME
   TIME
 }
 
@@ -174,6 +176,13 @@ scalar Timestamp @javaType(name: "java.util.Date")
 scalar Url @javaType(name: "java.net.URL")
 
 scalar Void @javaType(name: "java.lang.Void")
+
+input AppointmentFilterInput {
+  doctorLastName: String
+  patientLastName: String
+  timeMax: LocalDateTime
+  timeMin: LocalDateTime
+}
 
 input AppointmentInput {
   doctor: DoctorInput

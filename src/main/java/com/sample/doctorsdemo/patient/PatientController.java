@@ -40,6 +40,12 @@ public class PatientController {
         crudRepository.delete(entity);
     }
 
+    @NonNull
+    @QueryMapping(name = "patientFullList")
+    public List<Patient> findAllNoPaging() {
+        return crudRepository.findAll();
+    }
+
     @QueryMapping(name = "patientList")
     @Transactional(readOnly = true)
     @NonNull
