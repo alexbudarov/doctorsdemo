@@ -28,11 +28,7 @@ export function AppointmentListScreenLayout() {
         <div style={{ display: recordId ? "none" : "block" }}>
           <AppointmentList />
         </div>
-        {recordId && (
-          <AppointmentDetails
-            refetchQueries={["AppointmentList_AppointmentList"]}
-          />
-        )}
+        {recordId && <AppointmentDetails />}
       </BreadcrumbContext.Provider>
     </>
   );

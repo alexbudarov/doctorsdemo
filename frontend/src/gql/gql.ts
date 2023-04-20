@@ -5,12 +5,8 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
 const documents = {
   "\n  query Appointment_AppointmentList($id: ID!) {\n  appointment(id: $id) {\n    doctor {\n      firstName\n      id\n      lastName\n      specialty\n    }\n    durationMinutes\n    id\n    patient {\n      firstName\n      id\n      lastName\n    }\n    status\n    time\n  }\n}\n":
     graphql.Appointment_AppointmentListDocument,
-  "\n  mutation UpdateAppointment_AppointmentList($input: AppointmentInput!) {\n  updateAppointment(input: $input) {\n    durationMinutes\n    id\n    status\n    time\n  }\n}\n":
-    graphql.UpdateAppointment_AppointmentListDocument,
   "\n  query AppointmentList_AppointmentList(\n  $page: OffsetPageInput\n  $sort: [AppointmentOrderByInput]\n  $filter: AppointmentFilterInput\n) {\n  appointmentList(\n    page: $page\n    sort: $sort\n    filter: $filter\n  ) {\n    content {\n      doctor {\n        firstName\n        id\n        lastName\n        specialty\n      }\n      durationMinutes\n      id\n      patient {\n        firstName\n        id\n        lastName\n      }\n      status\n      time\n    }\n    totalElements\n  }\n}\n":
     graphql.AppointmentList_AppointmentListDocument,
-  "\n  mutation DeleteAppointment_AppointmentList($id: ID!) {\n  deleteAppointment(id: $id) \n}\n":
-    graphql.DeleteAppointment_AppointmentListDocument,
   "\n  query Doctor_DoctorList($id: ID!) {\n  doctor(id: $id) {\n    firstName\n    id\n    lastName\n    specialty\n  }\n}\n":
     graphql.Doctor_DoctorListDocument,
   "\n  mutation UpdateDoctor_DoctorList($input: DoctorInput!) {\n  updateDoctor(input: $input) {\n    firstName\n    id\n    lastName\n    specialty\n  }\n}\n":
@@ -37,14 +33,8 @@ export function gql(
   source: "\n  query Appointment_AppointmentList($id: ID!) {\n  appointment(id: $id) {\n    doctor {\n      firstName\n      id\n      lastName\n      specialty\n    }\n    durationMinutes\n    id\n    patient {\n      firstName\n      id\n      lastName\n    }\n    status\n    time\n  }\n}\n"
 ): typeof documents["\n  query Appointment_AppointmentList($id: ID!) {\n  appointment(id: $id) {\n    doctor {\n      firstName\n      id\n      lastName\n      specialty\n    }\n    durationMinutes\n    id\n    patient {\n      firstName\n      id\n      lastName\n    }\n    status\n    time\n  }\n}\n"];
 export function gql(
-  source: "\n  mutation UpdateAppointment_AppointmentList($input: AppointmentInput!) {\n  updateAppointment(input: $input) {\n    durationMinutes\n    id\n    status\n    time\n  }\n}\n"
-): typeof documents["\n  mutation UpdateAppointment_AppointmentList($input: AppointmentInput!) {\n  updateAppointment(input: $input) {\n    durationMinutes\n    id\n    status\n    time\n  }\n}\n"];
-export function gql(
   source: "\n  query AppointmentList_AppointmentList(\n  $page: OffsetPageInput\n  $sort: [AppointmentOrderByInput]\n  $filter: AppointmentFilterInput\n) {\n  appointmentList(\n    page: $page\n    sort: $sort\n    filter: $filter\n  ) {\n    content {\n      doctor {\n        firstName\n        id\n        lastName\n        specialty\n      }\n      durationMinutes\n      id\n      patient {\n        firstName\n        id\n        lastName\n      }\n      status\n      time\n    }\n    totalElements\n  }\n}\n"
 ): typeof documents["\n  query AppointmentList_AppointmentList(\n  $page: OffsetPageInput\n  $sort: [AppointmentOrderByInput]\n  $filter: AppointmentFilterInput\n) {\n  appointmentList(\n    page: $page\n    sort: $sort\n    filter: $filter\n  ) {\n    content {\n      doctor {\n        firstName\n        id\n        lastName\n        specialty\n      }\n      durationMinutes\n      id\n      patient {\n        firstName\n        id\n        lastName\n      }\n      status\n      time\n    }\n    totalElements\n  }\n}\n"];
-export function gql(
-  source: "\n  mutation DeleteAppointment_AppointmentList($id: ID!) {\n  deleteAppointment(id: $id) \n}\n"
-): typeof documents["\n  mutation DeleteAppointment_AppointmentList($id: ID!) {\n  deleteAppointment(id: $id) \n}\n"];
 export function gql(
   source: "\n  query Doctor_DoctorList($id: ID!) {\n  doctor(id: $id) {\n    firstName\n    id\n    lastName\n    specialty\n  }\n}\n"
 ): typeof documents["\n  query Doctor_DoctorList($id: ID!) {\n  doctor(id: $id) {\n    firstName\n    id\n    lastName\n    specialty\n  }\n}\n"];

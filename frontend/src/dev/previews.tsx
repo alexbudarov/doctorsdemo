@@ -1,8 +1,8 @@
 import React from "react";
-import { PatientLookup } from "../app/screens/patient/PatientLookup";
-import { DoctorLookup } from "../app/screens/doctor/DoctorLookup";
 import { AppointmentList } from "../app/screens/appointment/AppointmentList";
 import { AppointmentDetails } from "../app/screens/appointment/AppointmentDetails";
+import { PatientLookup } from "../app/screens/patient/PatientLookup";
+import { DoctorLookup } from "../app/screens/doctor/DoctorLookup";
 import { DoctorList } from "../app/screens/doctor/DoctorList";
 import { DoctorDetails } from "../app/screens/doctor/DoctorDetails";
 import { PatientList } from "../app/screens/patient/PatientList";
@@ -25,17 +25,17 @@ const ComponentPreviews = () => {
       <ComponentPreview path="/DoctorList">
         <DoctorList />
       </ComponentPreview>
-      <ComponentPreview path="/AppointmentDetails">
-        <AppointmentDetails />
-      </ComponentPreview>
-      <ComponentPreview path="/AppointmentList">
-        <AppointmentList />
-      </ComponentPreview>
       <ComponentPreview path="/DoctorLookup">
         <DoctorLookup />
       </ComponentPreview>
       <ComponentPreview path="/PatientLookup">
         <PatientLookup />
+      </ComponentPreview>
+      <ComponentPreview path="/AppointmentDetails">
+        <AppointmentDetails />
+      </ComponentPreview>
+      <ComponentPreview path="/AppointmentList">
+        <AppointmentList />
       </ComponentPreview>
     </Previews>
   );

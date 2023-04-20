@@ -281,21 +281,6 @@ export type Appointment_AppointmentListQuery = {
   };
 };
 
-export type UpdateAppointment_AppointmentListMutationVariables = Exact<{
-  input: AppointmentInput;
-}>;
-
-export type UpdateAppointment_AppointmentListMutation = {
-  __typename?: "Mutation";
-  updateAppointment: {
-    __typename?: "Appointment";
-    durationMinutes: number;
-    id?: string | null;
-    status?: AppointmentStatus | null;
-    time: any;
-  };
-};
-
 export type AppointmentList_AppointmentListQueryVariables = Exact<{
   page?: InputMaybe<OffsetPageInput>;
   sort?: InputMaybe<
@@ -331,15 +316,6 @@ export type AppointmentList_AppointmentListQuery = {
       };
     } | null> | null;
   };
-};
-
-export type DeleteAppointment_AppointmentListMutationVariables = Exact<{
-  id: Scalars["ID"];
-}>;
-
-export type DeleteAppointment_AppointmentListMutation = {
-  __typename?: "Mutation";
-  deleteAppointment?: any | null;
 };
 
 export type Doctor_DoctorListQueryVariables = Exact<{
@@ -586,66 +562,6 @@ export const Appointment_AppointmentListDocument = {
   Appointment_AppointmentListQuery,
   Appointment_AppointmentListQueryVariables
 >;
-export const UpdateAppointment_AppointmentListDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "UpdateAppointment_AppointmentList" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "input" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AppointmentInput" },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "updateAppointment" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "input" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "input" },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "durationMinutes" },
-                },
-                { kind: "Field", name: { kind: "Name", value: "id" } },
-                { kind: "Field", name: { kind: "Name", value: "status" } },
-                { kind: "Field", name: { kind: "Name", value: "time" } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  UpdateAppointment_AppointmentListMutation,
-  UpdateAppointment_AppointmentListMutationVariables
->;
 export const AppointmentList_AppointmentListDocument = {
   kind: "Document",
   definitions: [
@@ -799,48 +715,6 @@ export const AppointmentList_AppointmentListDocument = {
 } as unknown as DocumentNode<
   AppointmentList_AppointmentListQuery,
   AppointmentList_AppointmentListQueryVariables
->;
-export const DeleteAppointment_AppointmentListDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "DeleteAppointment_AppointmentList" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "deleteAppointment" },
-            arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "id" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "id" },
-                },
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  DeleteAppointment_AppointmentListMutation,
-  DeleteAppointment_AppointmentListMutationVariables
 >;
 export const Doctor_DoctorListDocument = {
   kind: "Document",
