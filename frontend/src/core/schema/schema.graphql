@@ -1,10 +1,4 @@
-# This file was automatically generated. Do not edit manually.
-
-schema {
-  query: Query
-  mutation: Mutation
-}
-
+# THIS FILE WAS GENERATED AUTOMATICALLY. DO NOT EDIT.
 directive @negativeOrZero on INPUT_FIELD_DEFINITION
 
 directive @notBlank on INPUT_FIELD_DEFINITION
@@ -79,7 +73,7 @@ type DoctorResultPage {
   totalElements: Long!
 }
 
-"Mutation root"
+# Mutation root
 type Mutation {
   deleteAppointment(id: ID!): Void
   deleteDoctor(id: ID!): Void
@@ -100,7 +94,7 @@ type PatientResultPage {
   totalElements: Long!
 }
 
-"Query root"
+# Query root
 type Query {
   appointment(id: ID!): Appointment!
   appointmentList(page: OffsetPageInput, sort: [AppointmentOrderByInput]): AppointmentResultPage!
@@ -153,31 +147,31 @@ enum Specialty {
   PSYCHIATRY
 }
 
-scalar BigDecimal @javaType(name: "java.math.BigDecimal")
+scalar BigDecimal
 
-scalar BigInteger @javaType(name: "java.math.BigInteger")
+scalar BigInteger
 
-scalar Date @javaType(name: "java.time.LocalDate")
+scalar Date
 
-scalar DateTime @javaType(name: "java.time.OffsetDateTime")
+scalar DateTime
 
-scalar LocalDateTime @javaType(name: "java.time.LocalDateTime")
+scalar LocalDateTime
 
-scalar LocalTime @javaType(name: "java.time.LocalTime")
+scalar LocalTime
 
-scalar Long @javaType(name: "java.lang.Long")
+scalar Long
 
-scalar Time @javaType(name: "java.time.OffsetTime")
+scalar Time
 
-scalar Timestamp @javaType(name: "java.util.Date")
+scalar Timestamp
 
-scalar Url @javaType(name: "java.net.URL")
+scalar Url
 
-scalar Void @javaType(name: "java.lang.Void")
+scalar Void
 
 input AppointmentInput {
   doctor: DoctorInput
-  durationMinutes: Int! @positive
+  durationMinutes: Int!
   id: ID
   patient: PatientInput!
   status: AppointmentStatus
@@ -226,3 +220,4 @@ input PatientOrderByInput {
   direction: SortDirection
   property: PatientOrderByProperty
 }
+
