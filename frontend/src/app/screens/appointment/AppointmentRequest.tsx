@@ -59,7 +59,7 @@ mutation RequestAppointment_AppointmentRequest($request: AppointmentRequestInput
 export function AppointmentRequest() {
   const [form] = useForm();
 
-  const [createdAppointmentId, setCreatedAppointmentId] = useState<String>();
+  const [createdAppointmentId, setCreatedAppointmentId] = useState<String | null>();
   const [appointmentNotPermitted, setAppointmentNotPermitted] = useState<boolean>(false);
 
   const {
@@ -106,6 +106,8 @@ export function AppointmentRequest() {
       if (appointmentCreationResult?.reserved) {
         setCreatedAppointmentId(appointmentCreationResult?.appointment?.id || "");
         form.resetFields();
+      } else {
+        setCreatedAppointmentId(null);
       }
     });
   };
