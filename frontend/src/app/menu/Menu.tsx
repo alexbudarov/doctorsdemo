@@ -37,6 +37,14 @@ const menuItems: ItemType[] = [
       </Link>
     ),
     key: "appointment"
+  },
+  {
+    label: (
+      <Link to="appointment-new">
+        <FormattedMessage id="screen.AppointmentNew" />
+      </Link>
+    ),
+    key: "appointment-new"
   }
 ];
 

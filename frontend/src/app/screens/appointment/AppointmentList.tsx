@@ -55,6 +55,7 @@ const APPOINTMENT_LIST = gql(`
         specialty
       }
       durationMinutes
+      endTime
       id
       patient {
         firstName
@@ -76,11 +77,6 @@ const columns = [
     key: "doctor"
   },
   {
-    title: "Duration Minutes",
-    dataIndex: "durationMinutes",
-    key: "durationMinutes"
-  },
-  {
     title: "Patient",
     dataIndex: "patient",
     key: "patient"
@@ -94,6 +90,11 @@ const columns = [
     title: "Time",
     dataIndex: "time",
     key: "time"
+  },
+  {
+    title: "End Time",
+    dataIndex: "endTime",
+    key: "endTime"
   }
 ];
 
@@ -446,7 +447,8 @@ function TableSection({
       ...{
         doctor: getDoctorDisplayName(item!.doctor ?? undefined),
         patient: getPatientDisplayName(item!.patient ?? undefined),
-        time: item!.time?.format("LLL") ?? undefined
+        time: item!.time?.format("LLL") ?? undefined,
+        endTime: item!.endTime?.format("LLL") ?? undefined
       }
     }));
 

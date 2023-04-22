@@ -173,4 +173,9 @@ public class AppointmentController {
     public AppointmentRequestResult requestAppointment(@Argument @NotNull AppointmentRequestInput request) {
         return appointmentService.requestAppointment(request);
     }
+
+    @MutationMapping(name = "cancelAppointment")
+    public void cancelAppointment(@Argument @NotNull @GraphQLId Long id) {
+        appointmentService.cancelAppointment(id);
+    }
 }

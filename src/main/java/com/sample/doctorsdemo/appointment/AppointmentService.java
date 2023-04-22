@@ -7,9 +7,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 public class AppointmentService {
+    private static final Set<AppointmentStatus> VALID_STATUSES = Set.of(
+            AppointmentStatus.PENDING,
+            AppointmentStatus.MISSED,
+            AppointmentStatus.IN_PROGRESS,
+            AppointmentStatus.FINISHED
+    );
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
@@ -44,19 +51,20 @@ public class AppointmentService {
         appointment.setDoctor(doctorRepository.getReferenceById(request.getDoctorId()));
         appointment.setTime(request.getTime());
         appointment.setDurationMinutes(request.getDurationMinutes());
+        appointment.setStatus(AppointmentStatus.PENDING);
 
         return appointmentRepository.save(appointment);
     }
 
     private boolean isAppointmentExistsForDoctor(AppointmentRequestInput request) {
         LocalDateTime requestEndTime = request.getTime().plusMinutes(request.getDurationMinutes());
-        long count = appointmentRepository.countByDoctorAndPeriod(request.getDoctorId(), request.getTime(), requestEndTime);
+        long count = appointmentRepository.countByDoctorAndPeriod(request.getDoctorId(), request.getTime(), requestEndTime, VALID_STATUSES);
         return count > 0;
     }
 
     private boolean isAppointmentExistsForPatient(AppointmentRequestInput request) {
         LocalDateTime requestEndTime = request.getTime().plusMinutes(request.getDurationMinutes());
-        long count = appointmentRepository.countByPatientAndPeriod(request.getPatientId(), request.getTime(), requestEndTime);
+        long count = appointmentRepository.countByPatientAndPeriod(request.getPatientId(), request.getTime(), requestEndTime, VALID_STATUSES);
         return count > 0;
     }
 

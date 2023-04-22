@@ -87,6 +87,7 @@ type DoctorResultPage {
 
 "Mutation root"
 type Mutation {
+  cancelAppointment(id: ID!): Void
   deleteDoctor(id: ID!): Void
   deletePatient(id: ID!): Void
   requestAppointment(request: AppointmentRequestInput!): AppointmentRequestResult!

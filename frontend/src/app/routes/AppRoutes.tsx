@@ -1,3 +1,4 @@
+import { AppointmentNew } from "../screens/appointment/AppointmentNew";
 import { AppointmentListScreenLayout } from "../screens/appointment/AppointmentListScreenLayout";
 import { DoctorListScreenLayout } from "../screens/doctor/DoctorListScreenLayout";
 import { PatientListScreenLayout } from "../screens/patient/PatientListScreenLayout";
@@ -25,6 +26,7 @@ export function AppRoutes() {
         <Route index element={<AppointmentListScreenLayout />} />
         <Route path=":recordId" element={<AppointmentListScreenLayout />} />
       </Route>
+      <Route path="appointment-new" element={<AppointmentNew />} />
     </Routes>
   );
 }

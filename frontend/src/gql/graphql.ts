@@ -298,6 +298,7 @@ export type AppointmentList_AppointmentListQuery = {
     content?: Array<{
       __typename?: "Appointment";
       durationMinutes: number;
+      endTime?: any | null;
       id?: string | null;
       status?: AppointmentStatus | null;
       time: any;
@@ -315,6 +316,54 @@ export type AppointmentList_AppointmentListQuery = {
         lastName: string;
       };
     } | null> | null;
+  };
+};
+
+export type PatientList_AppointmentRequestQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type PatientList_AppointmentRequestQuery = {
+  __typename?: "Query";
+  patientList: {
+    __typename?: "PatientResultPage";
+    content?: Array<{
+      __typename?: "Patient";
+      firstName: string;
+      id?: string | null;
+      lastName: string;
+    } | null> | null;
+  };
+};
+
+export type DoctorList_AppointmentRequestQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type DoctorList_AppointmentRequestQuery = {
+  __typename?: "Query";
+  doctorList: {
+    __typename?: "DoctorResultPage";
+    content?: Array<{
+      __typename?: "Doctor";
+      firstName: string;
+      id?: string | null;
+      lastName: string;
+      specialty?: Specialty | null;
+    } | null> | null;
+  };
+};
+
+export type RequestAppointment_AppointmentRequestMutationVariables = Exact<{
+  request: AppointmentRequestInput;
+}>;
+
+export type RequestAppointment_AppointmentRequestMutation = {
+  __typename?: "Mutation";
+  requestAppointment: {
+    __typename?: "AppointmentRequestResult";
+    reserved: boolean;
+    appointment?: { __typename?: "Appointment"; id?: string | null } | null;
   };
 };
 
@@ -671,6 +720,10 @@ export const AppointmentList_AppointmentListDocument = {
                         kind: "Field",
                         name: { kind: "Name", value: "durationMinutes" },
                       },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "endTime" },
+                      },
                       { kind: "Field", name: { kind: "Name", value: "id" } },
                       {
                         kind: "Field",
@@ -715,6 +768,216 @@ export const AppointmentList_AppointmentListDocument = {
 } as unknown as DocumentNode<
   AppointmentList_AppointmentListQuery,
   AppointmentList_AppointmentListQueryVariables
+>;
+export const PatientList_AppointmentRequestDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "PatientList_AppointmentRequest" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "patientList" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "sort" },
+                value: {
+                  kind: "ListValue",
+                  values: [
+                    {
+                      kind: "ObjectValue",
+                      fields: [
+                        {
+                          kind: "ObjectField",
+                          name: { kind: "Name", value: "direction" },
+                          value: { kind: "EnumValue", value: "ASC" },
+                        },
+                        {
+                          kind: "ObjectField",
+                          name: { kind: "Name", value: "property" },
+                          value: { kind: "EnumValue", value: "FIRST_NAME" },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "content" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "firstName" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "lastName" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  PatientList_AppointmentRequestQuery,
+  PatientList_AppointmentRequestQueryVariables
+>;
+export const DoctorList_AppointmentRequestDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "DoctorList_AppointmentRequest" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "doctorList" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "sort" },
+                value: {
+                  kind: "ListValue",
+                  values: [
+                    {
+                      kind: "ObjectValue",
+                      fields: [
+                        {
+                          kind: "ObjectField",
+                          name: { kind: "Name", value: "direction" },
+                          value: { kind: "EnumValue", value: "ASC" },
+                        },
+                        {
+                          kind: "ObjectField",
+                          name: { kind: "Name", value: "property" },
+                          value: { kind: "EnumValue", value: "FIRST_NAME" },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "content" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "firstName" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "lastName" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "specialty" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DoctorList_AppointmentRequestQuery,
+  DoctorList_AppointmentRequestQueryVariables
+>;
+export const RequestAppointment_AppointmentRequestDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "RequestAppointment_AppointmentRequest" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "request" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "AppointmentRequestInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "requestAppointment" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "request" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "request" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "appointment" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "reserved" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RequestAppointment_AppointmentRequestMutation,
+  RequestAppointment_AppointmentRequestMutationVariables
 >;
 export const Doctor_DoctorListDocument = {
   kind: "Document",

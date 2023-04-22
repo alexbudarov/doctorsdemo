@@ -66,5 +66,7 @@
   "screen.AppointmentDetails": "Appointment Details",
   "screen.AppointmentList": "Appointment List",
   "screen.DoctorLookup": "Doctor Lookup",
-  "screen.PatientLookup": "Patient Lookup"
+  "screen.PatientLookup": "Patient Lookup",
+  "screen.AppointmentNew": "Request Appointment",
+  "appointment.success": "Appointment {id} created successfully"
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { AppointmentNew } from "../app/screens/appointment/AppointmentNew";
 import { AppointmentList } from "../app/screens/appointment/AppointmentList";
 import { AppointmentDetails } from "../app/screens/appointment/AppointmentDetails";
 import { PatientLookup } from "../app/screens/patient/PatientLookup";
@@ -9,6 +10,7 @@ import { PatientList } from "../app/screens/patient/PatientList";
 import { PatientDetails } from "../app/screens/patient/PatientDetails";
 import { ComponentPreview, Previews } from "@react-buddy/ide-toolbox";
 import { PaletteTree } from "./palette";
+import { AppointmentRequest } from "../app/screens/appointment/AppointmentRequest";
 
 const ComponentPreviews = () => {
   return (
@@ -36,6 +38,12 @@ const ComponentPreviews = () => {
       </ComponentPreview>
       <ComponentPreview path="/AppointmentList">
         <AppointmentList />
+      </ComponentPreview>
+      <ComponentPreview path="/AppointmentRequest">
+        <AppointmentRequest />
+      </ComponentPreview>
+      <ComponentPreview path="/AppointmentNew">
+        <AppointmentNew />
       </ComponentPreview>
     </Previews>
   );

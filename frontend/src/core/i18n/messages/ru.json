@@ -69,5 +69,6 @@
 
   "form.validation.null": "Должно равняться null",
 
-  "sort.sortBy": "Сортировать по"
+  "sort.sortBy": "Сортировать по",
+  "appointment.success": "Appointment {id} created successfully"
 }
