@@ -1,40 +1,22 @@
-import { useMemo, useState, useEffect, useCallback } from "react";
-import { useQuery } from "@apollo/client";
-import { ApolloError } from "@apollo/client/errors";
-import { ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
-import {
-  Button,
-  Row,
-  Col,
-  Card,
-  Form,
-  Input,
-  Pagination,
-  Select,
-  Space,
-  Table
-} from "antd";
-import { useForm } from "antd/lib/form/Form";
-import { serializeVariables } from "../../../core/transform/model/serializeVariables";
-import { DatePicker } from "@amplicode/react";
-import {
-  CloseCircleOutlined,
-  ArrowUpOutlined,
-  ArrowDownOutlined
-} from "@ant-design/icons";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { FormattedMessage, useIntl } from "react-intl";
-import { gql } from "@amplicode/gql";
-import { RequestFailedError } from "../../../core/crud/RequestFailedError";
-import { deserialize } from "../../../core/transform/model/deserialize";
-import { getDoctorDisplayName } from "../../../core/display-name/getDoctorDisplayName";
-import { getPatientDisplayName } from "../../../core/display-name/getPatientDisplayName";
-import { useBreadcrumbItem } from "../../../core/screen/useBreadcrumbItem";
-import {
-  SortDirection,
-  AppointmentOrderByProperty
-} from "../../../gql/graphql";
-import { DefaultOptionType } from "antd/lib/select";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {useMutation, useQuery} from "@apollo/client";
+import {ApolloError} from "@apollo/client/errors";
+import {ResultOf, VariablesOf} from "@graphql-typed-document-node/core";
+import {Button, Card, Col, Form, Input, notification, Pagination, Row, Select, Space, Table} from "antd";
+import {useForm} from "antd/lib/form/Form";
+import {serializeVariables} from "../../../core/transform/model/serializeVariables";
+import {DatePicker} from "@amplicode/react";
+import {ArrowDownOutlined, ArrowUpOutlined, CloseCircleOutlined, StopOutlined} from "@ant-design/icons";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {FormattedMessage, useIntl} from "react-intl";
+import {gql} from "@amplicode/gql";
+import {RequestFailedError} from "../../../core/crud/RequestFailedError";
+import {deserialize} from "../../../core/transform/model/deserialize";
+import {getDoctorDisplayName} from "../../../core/display-name/getDoctorDisplayName";
+import {getPatientDisplayName} from "../../../core/display-name/getPatientDisplayName";
+import {useBreadcrumbItem} from "../../../core/screen/useBreadcrumbItem";
+import {AppointmentOrderByProperty, AppointmentStatus, SortDirection} from "../../../gql/graphql";
+import {DefaultOptionType} from "antd/lib/select";
 
 const APPOINTMENT_LIST = gql(`
   query AppointmentList_AppointmentList(
@@ -99,6 +81,12 @@ const columns = [
 ];
 
 const DEFAULT_PAGE_SIZE = 10;
+
+const CANCEL_APPOINTMENT_BUTTON_PANEL = gql(`
+mutation CancelAppointment_ButtonPanel($appId: ID!) {
+    cancelAppointment(id: $appId)
+}
+`);
 
 export function AppointmentList() {
   const intl = useIntl();
@@ -180,6 +168,7 @@ export function AppointmentList() {
           />
         </Card>
         <ButtonPanel
+          selectedRow={items?.find(i => i?.id === selectedRowId)}
           selectedRowId={selectedRowId}
           onApplySort={applySort}
           sortValue={selectionState.sort}
@@ -277,6 +266,7 @@ const sortBySelectorOptions: DefaultOptionType[] = [
 ];
 
 interface ButtonPanelProps {
+  selectedRow?: ItemType;
   selectedRowId?: string;
   onApplySort: (sort: QueryVariablesType["sort"]) => void;
   sortValue?: QueryVariablesType["sort"];
@@ -285,12 +275,33 @@ interface ButtonPanelProps {
  * Button panel above
  */
 function ButtonPanel({
+  selectedRow,
   selectedRowId,
   onApplySort,
   sortValue
 }: ButtonPanelProps) {
   const intl = useIntl();
   const navigate = useNavigate();
+
+  const [runCancelAppointment, {
+    loading: cancelAppointmentLoading
+  }] = useMutation(CANCEL_APPOINTMENT_BUTTON_PANEL, {
+    variables: {
+      appId: selectedRowId || ''
+    },
+    refetchQueries: ['AppointmentList_AppointmentList']
+  });
+
+  const onCancelButtonClick = useCallback(() => {
+    if (!selectedRowId) {return;}
+
+    runCancelAppointment()
+      .then(answer => {
+        notification.success({message: 'Cancelled'})
+      }).catch(answer => {
+        notification.error({message: 'Cancellation error'})
+    })
+  }, [selectedRowId, runCancelAppointment]);
 
   return (
     <Row justify="space-between" gutter={[16, 8]}>
@@ -306,6 +317,14 @@ function ButtonPanel({
             <span>
               <FormattedMessage id="common.viewDetails" />
             </span>
+          </Button>
+
+          <Button
+            disabled={selectedRow?.status !== AppointmentStatus.Pending}
+            loading={cancelAppointmentLoading}
+            icon={<StopOutlined/>}
+            onClick={onCancelButtonClick}>
+            Cancel
           </Button>
         </Space>
       </Col>

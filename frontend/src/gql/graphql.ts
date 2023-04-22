@@ -125,11 +125,16 @@ export type DoctorResultPage = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  cancelAppointment?: Maybe<Scalars["Void"]>;
   deleteDoctor?: Maybe<Scalars["Void"]>;
   deletePatient?: Maybe<Scalars["Void"]>;
   requestAppointment: AppointmentRequestResult;
   updateDoctor: Doctor;
   updatePatient: Patient;
+};
+
+export type MutationCancelAppointmentArgs = {
+  id: Scalars["ID"];
 };
 
 export type MutationDeleteDoctorArgs = {
@@ -317,6 +322,15 @@ export type AppointmentList_AppointmentListQuery = {
       };
     } | null> | null;
   };
+};
+
+export type CancelAppointment_ButtonPanelMutationVariables = Exact<{
+  appId: Scalars["ID"];
+}>;
+
+export type CancelAppointment_ButtonPanelMutation = {
+  __typename?: "Mutation";
+  cancelAppointment?: any | null;
 };
 
 export type PatientList_AppointmentRequestQueryVariables = Exact<{
@@ -768,6 +782,51 @@ export const AppointmentList_AppointmentListDocument = {
 } as unknown as DocumentNode<
   AppointmentList_AppointmentListQuery,
   AppointmentList_AppointmentListQueryVariables
+>;
+export const CancelAppointment_ButtonPanelDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CancelAppointment_ButtonPanel" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "appId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "cancelAppointment" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "appId" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CancelAppointment_ButtonPanelMutation,
+  CancelAppointment_ButtonPanelMutationVariables
 >;
 export const PatientList_AppointmentRequestDocument = {
   kind: "Document",

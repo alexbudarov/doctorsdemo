@@ -7,6 +7,8 @@ const documents = {
     graphql.Appointment_AppointmentListDocument,
   "\n  query AppointmentList_AppointmentList(\n  $page: OffsetPageInput\n  $sort: [AppointmentOrderByInput]\n  $filter: AppointmentFilterInput\n) {\n  appointmentList(\n    page: $page\n    sort: $sort\n    filter: $filter\n  ) {\n    content {\n      doctor {\n        firstName\n        id\n        lastName\n        specialty\n      }\n      durationMinutes\n      endTime\n      id\n      patient {\n        firstName\n        id\n        lastName\n      }\n      status\n      time\n    }\n    totalElements\n  }\n}\n":
     graphql.AppointmentList_AppointmentListDocument,
+  "\nmutation CancelAppointment_ButtonPanel($appId: ID!) {\n    cancelAppointment(id: $appId)\n}\n":
+    graphql.CancelAppointment_ButtonPanelDocument,
   "\nquery PatientList_AppointmentRequest {\n    patientList(sort: [{\n            direction: ASC,\n            property: FIRST_NAME\n        }]) {\n        content {\n            firstName\n            id\n            lastName\n        }\n    }\n}\n":
     graphql.PatientList_AppointmentRequestDocument,
   "\nquery DoctorList_AppointmentRequest {\n    doctorList(sort: [{\n            direction: ASC,\n            property: FIRST_NAME\n        }]) {\n        content {\n            firstName\n            id\n            lastName\n            specialty\n        }\n    }\n}\n":
@@ -41,6 +43,9 @@ export function gql(
 export function gql(
   source: "\n  query AppointmentList_AppointmentList(\n  $page: OffsetPageInput\n  $sort: [AppointmentOrderByInput]\n  $filter: AppointmentFilterInput\n) {\n  appointmentList(\n    page: $page\n    sort: $sort\n    filter: $filter\n  ) {\n    content {\n      doctor {\n        firstName\n        id\n        lastName\n        specialty\n      }\n      durationMinutes\n      endTime\n      id\n      patient {\n        firstName\n        id\n        lastName\n      }\n      status\n      time\n    }\n    totalElements\n  }\n}\n"
 ): typeof documents["\n  query AppointmentList_AppointmentList(\n  $page: OffsetPageInput\n  $sort: [AppointmentOrderByInput]\n  $filter: AppointmentFilterInput\n) {\n  appointmentList(\n    page: $page\n    sort: $sort\n    filter: $filter\n  ) {\n    content {\n      doctor {\n        firstName\n        id\n        lastName\n        specialty\n      }\n      durationMinutes\n      endTime\n      id\n      patient {\n        firstName\n        id\n        lastName\n      }\n      status\n      time\n    }\n    totalElements\n  }\n}\n"];
+export function gql(
+  source: "\nmutation CancelAppointment_ButtonPanel($appId: ID!) {\n    cancelAppointment(id: $appId)\n}\n"
+): typeof documents["\nmutation CancelAppointment_ButtonPanel($appId: ID!) {\n    cancelAppointment(id: $appId)\n}\n"];
 export function gql(
   source: "\nquery PatientList_AppointmentRequest {\n    patientList(sort: [{\n            direction: ASC,\n            property: FIRST_NAME\n        }]) {\n        content {\n            firstName\n            id\n            lastName\n        }\n    }\n}\n"
 ): typeof documents["\nquery PatientList_AppointmentRequest {\n    patientList(sort: [{\n            direction: ASC,\n            property: FIRST_NAME\n        }]) {\n        content {\n            firstName\n            id\n            lastName\n        }\n    }\n}\n"];
