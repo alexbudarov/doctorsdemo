@@ -1,12 +1,23 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
-import { Palette } from "@react-buddy/ide-toolbox";
-import AntdPalette from "@react-buddy/palette-antd";
-import ReactIntlPalette from "@react-buddy/palette-react-intl";
+import { Category, Component, Palette, Variant } from "@react-buddy/ide-toolbox";
+import { Fragment } from "react";
+import { CardListTemplate } from "./CardListTemplate";
+import { GridCardListTemplate } from "./GridCardListTemplate";
+import { SimpleCardListTemplate } from "./SimpleCardListTemplate";
 
 export const PaletteTree = () => (
   <Palette>
-    <ReactIntlPalette />
-    <AntdPalette />
+    <Category name="App Templates">
+      <Component name="Card List">
+        <Variant name="One column" proto={CardListTemplate} />
+        <Variant name="Grid" proto={GridCardListTemplate} />
+      </Component>
+      <Component name="Simple List">
+        <Variant proto={SimpleCardListTemplate} />
+      </Component>
+    </Category>
   </Palette>
 );
+
+export function ExampleLoaderComponent() {
+  return <Fragment>Loading...</Fragment>;
+}

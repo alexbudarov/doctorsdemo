@@ -1,12 +1,12 @@
 import { ApolloLink } from "@apollo/client";
-import { i18nStore } from "../../i18n/providers/I18nProvider";
+import { i18nProvider } from "../../../i18nProvider";
 
 export const localeLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
-      "accept-language": i18nStore.currentLocale || null
-    }
+      "accept-language": i18nProvider.getLocale(),
+    },
   }));
   return forward(operation);
 });

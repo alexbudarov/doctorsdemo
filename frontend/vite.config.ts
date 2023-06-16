@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 const PORT = "8080";
 const SERVER_URL = "http://localhost";
@@ -12,8 +12,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      [`^/(${AMPLICODE_ENDPOINTS})`]: `${SERVER_URL}:${PORT}`
+      [`^/(${AMPLICODE_ENDPOINTS})`]: `${SERVER_URL}:${PORT}`,
     },
-    base: `${BASE_URL}`
-  }
+    base: `${BASE_URL}`,
+  },
 });
