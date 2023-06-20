@@ -2,6 +2,7 @@ package com.sample.doctorsdemo.config;
 
 import com.amplicode.core.auth.AuthenticationInfoProvider;
 import com.amplicode.core.auth.UserDetailsAuthenticationInfoProvider;
+import com.amplicode.core.security.Authorities;
 import com.amplicode.core.security.UnauthorizedStatusAuthenticationEntryPoint;
 import com.amplicode.core.security.formlogin.FormLoginAuthenticationFailureHandler;
 import com.amplicode.core.security.formlogin.FormLoginAuthenticationSuccessHandler;
@@ -26,7 +27,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration {
 
     private final String adminUsername;
@@ -87,7 +88,7 @@ public class SecurityConfiguration {
         UserDetails admin = User.builder()
                 .username(adminUsername)
                 .password(adminPassword)
-                .roles("ADMIN")
+                .authorities("ROLE_ADMIN", Authorities.FULL_ACCESS)
                 .build();
 
         return new InMemoryUserDetailsManager(admin);

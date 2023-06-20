@@ -3,6 +3,7 @@ package com.sample.doctorsdemo.doctor;
 import com.amplicode.core.graphql.annotation.GraphQLId;
 import com.amplicode.core.graphql.paging.OffsetPageInput;
 import com.amplicode.core.graphql.paging.ResultPage;
+import com.amplicode.core.security.Authorities;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ public class DoctorController {
         this.crudRepository = crudRepository;
     }
 
+    @Secured({Authorities.FULL_ACCESS})
     @MutationMapping(name = "deleteDoctor")
     @Transactional
     public void delete(@GraphQLId @Argument @NonNull Long id) {
@@ -40,12 +43,14 @@ public class DoctorController {
         crudRepository.delete(entity);
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @NonNull
     @QueryMapping(name = "doctorFullList")
     public List<Doctor> findAllNoPaging() {
         return crudRepository.findAll();
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @QueryMapping(name = "doctorList")
     @Transactional(readOnly = true)
     @NonNull
@@ -58,6 +63,7 @@ public class DoctorController {
         return ResultPage.page(pageData.getContent(), pageData.getTotalElements());
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @QueryMapping(name = "doctor")
     @Transactional(readOnly = true)
     @NonNull
@@ -66,6 +72,7 @@ public class DoctorController {
                 .orElseThrow(() -> new RuntimeException(String.format("Unable to find entity by id: %s ", id)));
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @MutationMapping(name = "updateDoctor")
     @Transactional
     @NonNull

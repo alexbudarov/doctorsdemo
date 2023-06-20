@@ -3,6 +3,7 @@ package com.sample.doctorsdemo.appointment;
 import com.amplicode.core.graphql.annotation.GraphQLId;
 import com.amplicode.core.graphql.paging.OffsetPageInput;
 import com.amplicode.core.graphql.paging.ResultPage;
+import com.amplicode.core.security.Authorities;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,7 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @NonNull
     @QueryMapping(name = "appointmentList")
     public ResultPage<Appointment> findAll(@Argument OffsetPageInput page, @Argument List<AppointmentOrderByInput> sort, @Argument AppointmentFilter filter) {
@@ -46,6 +49,7 @@ public class AppointmentController {
         return ResultPage.page(result.getContent(), result.getTotalElements());
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @QueryMapping(name = "appointment")
     @Transactional(readOnly = true)
     @NonNull
@@ -168,12 +172,14 @@ public class AppointmentController {
         }
     }
 
+    @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
     @MutationMapping(name = "requestAppointment")
     @NotNull
     public AppointmentRequestResult requestAppointment(@Argument @NotNull AppointmentRequestInput request) {
         return appointmentService.requestAppointment(request);
     }
 
+    @Secured({Authorities.FULL_ACCESS})
     @MutationMapping(name = "cancelAppointment")
     public void cancelAppointment(@Argument @NotNull @GraphQLId Long id) {
         appointmentService.cancelAppointment(id);
