@@ -17,8 +17,6 @@ directive @pastOrPresent on INPUT_FIELD_DEFINITION
 
 directive @positiveOrZero on INPUT_FIELD_DEFINITION
 
-directive @javaType(name: String!) on SCALAR
-
 directive @size(max: Int = 2147483647, min: Int = 0) on INPUT_FIELD_DEFINITION
 
 directive @null on INPUT_FIELD_DEFINITION
@@ -53,6 +51,8 @@ directive @digits(fraction: Int!, integer: Int!) on INPUT_FIELD_DEFINITION
 
 directive @decimalMin(inclusive: Boolean = true, value: String!) on INPUT_FIELD_DEFINITION
 
+directive @javaType(name: String!) on SCALAR | OBJECT | INPUT_OBJECT
+
 type Appointment {
   doctor: Doctor
   durationMinutes: Int!
@@ -68,11 +68,6 @@ type AppointmentRequestResult {
   reserved: Boolean!
 }
 
-type AppointmentResultPage {
-  content: [Appointment]
-  totalElements: Long!
-}
-
 type Doctor {
   firstName: String!
   id: ID
@@ -80,42 +75,14 @@ type Doctor {
   specialty: Specialty
 }
 
-type DoctorResultPage {
-  content: [Doctor]
-  totalElements: Long!
-}
-
 "Mutation root"
 type Mutation {
   cancelAppointment(id: ID!): Void
-  deleteDoctor(id: ID!): Void
-  deletePatient(id: ID!): Void
   requestAppointment(request: AppointmentRequestInput!): AppointmentRequestResult!
-  updateDoctor(input: DoctorInput!): Doctor!
-  updatePatient(input: PatientInput!): Patient!
-}
-
-type Patient {
-  firstName: String!
-  id: ID
-  lastName: String!
-}
-
-type PatientResultPage {
-  content: [Patient]
-  totalElements: Long!
 }
 
 "Query root"
 type Query {
-  appointment(id: ID!): Appointment!
-  appointmentList(filter: AppointmentFilterInput, page: OffsetPageInput, sort: [AppointmentOrderByInput]): AppointmentResultPage!
-  doctor(id: ID!): Doctor!
-  doctorFullList: [Doctor]!
-  doctorList(filter: DoctorFilterInput, page: OffsetPageInput, sort: [DoctorOrderByInput]): DoctorResultPage!
-  patient(id: ID!): Patient!
-  patientFullList: [Patient]!
-  patientList(filter: PatientFilterInput, page: OffsetPageInput, sort: [PatientOrderByInput]): PatientResultPage!
   userInfo: UserInfo
 }
 
@@ -123,10 +90,21 @@ type UserInfo {
   username: String
 }
 
-enum AppointmentOrderByProperty {
-  DOCTOR_FIRST_NAME
-  PATIENT_FIRST_NAME
-  TIME
+type Patient {
+  birthDate: Date
+  firstName: String!
+  homeAddress: String
+  id: ID
+  lastName: String!
+  subDistrict: SubDistrict
+}
+
+type SubDistrict {
+  centerLat: Float
+  centerLon: Float
+  id: ID
+  name: String
+  postcode: String
 }
 
 enum AppointmentStatus {
@@ -135,21 +113,6 @@ enum AppointmentStatus {
   IN_PROGRESS
   MISSED
   PENDING
-}
-
-enum DoctorOrderByProperty {
-  FIRST_NAME
-  LAST_NAME
-}
-
-enum PatientOrderByProperty {
-  FIRST_NAME
-  LAST_NAME
-}
-
-enum SortDirection {
-  ASC
-  DESC
 }
 
 enum Specialty {
@@ -183,59 +146,9 @@ scalar Url @javaType(name: "java.net.URL")
 
 scalar Void @javaType(name: "java.lang.Void")
 
-input AppointmentFilterInput {
-  doctorLastName: String
-  patientLastName: String
-  timeMax: LocalDateTime
-  timeMin: LocalDateTime
-}
-
-input AppointmentOrderByInput {
-  direction: SortDirection
-  property: AppointmentOrderByProperty
-}
-
 input AppointmentRequestInput {
   doctorId: ID!
   durationMinutes: Int!
   patientId: ID!
   time: LocalDateTime!
-}
-
-input DoctorFilterInput {
-  firstName: String
-  lastName: String
-}
-
-input DoctorInput {
-  firstName: String!
-  id: ID
-  lastName: String!
-  specialty: Specialty
-}
-
-input DoctorOrderByInput {
-  direction: SortDirection
-  property: DoctorOrderByProperty
-}
-
-input OffsetPageInput {
-  number: Int!
-  size: Int!
-}
-
-input PatientFilterInput {
-  firstName: String
-  lastName: String
-}
-
-input PatientInput {
-  firstName: String!
-  id: ID
-  lastName: String!
-}
-
-input PatientOrderByInput {
-  direction: SortDirection
-  property: PatientOrderByProperty
 }
