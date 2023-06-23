@@ -1,0 +1,8 @@
+query doctorList($filter : DoctorFilterInput, $sort : [DoctorOrderByInput], $page : OffsetPageInput) {
+    doctorList(filter : $filter, sort : $sort, page : $page) {
+        content {
+            id
+        }
+        totalElements
+    }
+}

@@ -1,0 +1,6 @@
+query doctorWithNonExistingId {
+    doctor(id: 99999999) {
+        id
+        specialty
+    }
+}

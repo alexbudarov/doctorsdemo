@@ -1,8 +1,8 @@
 # This file was automatically generated. Do not edit manually.
 
 schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }
 
 directive @negativeOrZero on INPUT_FIELD_DEFINITION
@@ -54,74 +54,127 @@ directive @decimalMin(inclusive: Boolean = true, value: String!) on INPUT_FIELD_
 directive @javaType(name: String!) on SCALAR | OBJECT | INPUT_OBJECT
 
 type Appointment {
-  doctor: Doctor
-  durationMinutes: Int!
-  endTime: LocalDateTime
-  id: ID
-  patient: Patient!
-  status: AppointmentStatus
-  time: LocalDateTime!
+    doctor: Doctor
+    durationMinutes: Int!
+    endTime: LocalDateTime
+    id: ID
+    patient: Patient!
+    status: AppointmentStatus
+    time: LocalDateTime!
 }
 
 type AppointmentRequestResult {
-  appointment: Appointment
-  reserved: Boolean!
+    appointment: Appointment
+    reserved: Boolean!
 }
 
 type Doctor {
-  firstName: String!
-  id: ID
-  lastName: String!
-  specialty: Specialty
+    firstName: String!
+    id: ID
+    lastName: String!
+    specialty: Specialty
 }
 
 "Mutation root"
 type Mutation {
-  cancelAppointment(id: ID!): Void
-  requestAppointment(request: AppointmentRequestInput!): AppointmentRequestResult!
+    cancelAppointment(id: ID!): Void
+    requestAppointment(request: AppointmentRequestInput!): AppointmentRequestResult!
+    deleteDoctor(id: ID!): Void
+    deletePatient(id: ID!): Void
+    deleteSubDistrict(id: ID!): Void
+    updateDoctor(input: DoctorInput!): Doctor!
+    updatePatient(input: PatientInput!): Patient!
+    updateSubDistrict(input: SubDistrictInput!): SubDistrict!
 }
 
 "Query root"
 type Query {
-  userInfo: UserInfo
+    userInfo: UserInfo
+    appointment(id: ID!): Appointment!
+    appointmentList(filter: AppointmentFilterInput, page: OffsetPageInput): AppointmentResultPage!
+    doctor(id: ID!): Doctor!
+    doctorList(filter: DoctorFilterInput, page: OffsetPageInput, sort: [DoctorOrderByInput]): DoctorResultPage!
+    patient(id: ID!): Patient!
+    patientList(filter: PatientFilterInput, page: OffsetPageInput, sort: [PatientOrderByInput]): PatientResultPage!
+    subDistrict(id: ID!): SubDistrict!
+    subDistrictList(filter: SubDistrictFilterInput, sort: [SubDistrictOrderByInput]): [SubDistrict]
 }
 
 type UserInfo {
-  username: String
+    username: String
 }
 
 type Patient {
-  birthDate: Date
-  firstName: String!
-  homeAddress: String
-  id: ID
-  lastName: String!
-  subDistrict: SubDistrict
+    birthDate: Date
+    firstName: String!
+    homeAddress: String
+    id: ID
+    lastName: String!
+    subDistrict: SubDistrict
 }
 
 type SubDistrict {
-  centerLat: Float
-  centerLon: Float
-  id: ID
-  name: String
-  postcode: String
+    centerLat: Float
+    centerLon: Float
+    id: ID
+    name: String
+    postcode: String
+}
+
+type AppointmentResultPage {
+    content: [Appointment]
+    totalElements: Long!
+}
+
+type DoctorResultPage {
+    content: [Doctor]
+    totalElements: Long!
+}
+
+type PatientResultPage {
+    content: [Patient]
+    totalElements: Long!
 }
 
 enum AppointmentStatus {
-  CANCELLED
-  FINISHED
-  IN_PROGRESS
-  MISSED
-  PENDING
+    CANCELLED
+    FINISHED
+    IN_PROGRESS
+    MISSED
+    PENDING
 }
 
 enum Specialty {
-  ALLERGY_AND_IMMUNOLOGY
-  DERMATOLOGY
-  GP
-  NEUROLOGY
-  OPHTHALMOLOGY
-  PSYCHIATRY
+    ALLERGY_AND_IMMUNOLOGY
+    DERMATOLOGY
+    GP
+    NEUROLOGY
+    OPHTHALMOLOGY
+    PSYCHIATRY
+}
+
+enum SortDirection {
+    ASC
+    DESC
+}
+
+enum DoctorOrderByProperty {
+    FIRST_NAME
+    LAST_NAME
+}
+
+enum PatientOrderByProperty {
+    BIRTH_DATE
+    FIRST_NAME
+    HOME_ADDRESS
+    LAST_NAME
+}
+
+enum SubDistrictOrderByProperty {
+    CENTER_LAT
+    CENTER_LON
+    NAME
+    POSTCODE
 }
 
 scalar BigDecimal @javaType(name: "java.math.BigDecimal")
@@ -147,8 +200,83 @@ scalar Url @javaType(name: "java.net.URL")
 scalar Void @javaType(name: "java.lang.Void")
 
 input AppointmentRequestInput {
-  doctorId: ID!
-  durationMinutes: Int!
-  patientId: ID!
-  time: LocalDateTime!
+    doctorId: ID!
+    durationMinutes: Int!
+    patientId: ID!
+    time: LocalDateTime!
+}
+
+input AppointmentFilterInput {
+    doctorId: Long
+    doctorLastName: String
+    patientLastName: String
+    timeMax: LocalDateTime
+    timeMin: LocalDateTime
+}
+
+input OffsetPageInput {
+    number: Int!
+    size: Int!
+}
+
+input DoctorFilterInput {
+    firstName: String
+    lastName: String
+    specialty: Specialty
+}
+
+input PatientFilterInput {
+    birthDateMax: Date
+    birthDateMin: Date
+    firstName: String
+    homeAddress: String
+    lastName: String
+}
+
+input SubDistrictFilterInput {
+    centerLatMax: Float
+    centerLatMin: Float
+    centerLonMax: Float
+    centerLonMin: Float
+    name: String
+    postcode: String
+}
+
+input DoctorInput {
+    firstName: String!
+    id: ID
+    lastName: String!
+    specialty: Specialty
+}
+
+input SubDistrictInput {
+    centerLat: Float
+    centerLon: Float
+    id: ID
+    name: String
+    postcode: String
+}
+
+input PatientInput {
+    birthDate: Date
+    firstName: String!
+    homeAddress: String
+    id: ID
+    lastName: String!
+    subDistrict: SubDistrictInput
+}
+
+input DoctorOrderByInput {
+    direction: SortDirection
+    property: DoctorOrderByProperty
+}
+
+input PatientOrderByInput {
+    direction: SortDirection
+    property: PatientOrderByProperty
+}
+
+input SubDistrictOrderByInput {
+    direction: SortDirection
+    property: SubDistrictOrderByProperty
 }

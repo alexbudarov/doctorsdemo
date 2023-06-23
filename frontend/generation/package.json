@@ -1,0 +1,10 @@
+{
+  "name": "doctorsdemo-generation",
+  "devDependencies": {
+    "@amplicode/codegen": ""
+  },
+  "scripts": {
+    "postinstall": "npm run listGenerators",
+    "listGenerators": "amplicodegen list -s generators.json"
+  }
+}

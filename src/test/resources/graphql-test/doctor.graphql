@@ -1,0 +1,7 @@
+query doctor($id : ID!) {
+    doctor(id : $id) {
+        lastName
+        firstName
+        id
+    }
+}
