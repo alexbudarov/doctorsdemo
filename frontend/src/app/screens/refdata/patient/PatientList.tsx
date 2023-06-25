@@ -1,30 +1,14 @@
-import { gql } from "@amplicode/gql";
-import { Patient } from "@amplicode/gql/graphql";
-import { ResultOf } from "@graphql-typed-document-node/core";
-import {
-  Datagrid,
-  DateInput,
-  DeleteButton,
-  EditButton,
-  FunctionField,
-  List,
-  TextField,
-  TextInput,
-} from "react-admin";
-import { renderDate } from "../../../../core/format/renderDate";
-import { getSubDistrictRecordRepresentation } from "../../../../core/record-representation/getSubDistrictRecordRepresentation";
+import {gql} from "@amplicode/gql";
+import {Patient, SubDistrict} from "@amplicode/gql/graphql";
+import {CreateButton, EditButton,} from "react-admin";
+import {useQuery} from "@apollo/client";
+import {useEffect, useMemo, useState} from "react";
+import {apolloClient} from "../../../../dataProvider/graphqlDataProvider";
+import {MaterialReactTable, MRT_ColumnDef, MRT_PaginationState} from "material-react-table";
 
-const PATIENT_LIST =
-  gql(`query PatientList(
-    $filter: PatientFilterInput,
-    $page: OffsetPageInput,
-    $sort: [PatientOrderByInput]
-) {
-    patientList(
-        filter: $filter,
-        page: $page,
-        sort: $sort
-) {
+const PATIENT_LIST_PATIENT_LIST = gql(`
+query PatientList_PatientList($page: OffsetPageInput) {
+    patientList(page: $page) {
         content {
             birthDate
             firstName
@@ -38,69 +22,158 @@ const PATIENT_LIST =
         }
         totalElements
     }
-}`);
+    subDistrictList {
+        id
+        name
+    }
+}
+`);
 
-const DELETE_PATIENT = gql(`mutation DeletePatient($id : ID!) {
-deletePatient(id : $id)
-}`);
+type TreeItem = {
+  district: SubDistrict | null,
+  patient: Patient | null,
+  children: Array<TreeItem>
+}
 
 export const PatientList = () => {
-  const queryOptions = {
-    meta: {
-      query: PATIENT_LIST,
-      resultDataPath: "content",
-      paginationQueryParam: "page",
-    },
-  };
 
-  const filters = [
-    <TextInput source="lastName" name="lastName" />,
-    <TextInput source="firstName" name="firstName" />,
-    <DateInput source="birthDateMax" name="birthDateMax" />,
-    <DateInput source="birthDateMin" name="birthDateMin" />,
-    <TextInput source="homeAddress" name="homeAddress" />,
-  ];
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
+
+
+  const {
+    data: listData
+  } = useQuery(PATIENT_LIST_PATIENT_LIST, {
+    client: apolloClient,
+    variables: {
+      page: {number: pagination.pageIndex, size: pagination.pageSize}
+    }
+  });
+
+  const treeItems = useMemo(() => {
+    const patients = (listData?.patientList?.content || []) as Array<Patient>
+    const subDistricts = (listData?.subDistrictList || []) as Array<SubDistrict>
+
+    const tree = new Map<any, Array<Patient>>()
+    patients.forEach(p => {
+      const subDistrictId = p.subDistrict?.id || ''
+      const existingItem = tree.get(subDistrictId)
+      if (existingItem) {
+        existingItem.push(p)
+      } else {
+        tree.set(subDistrictId, [p])
+      }
+    })
+    const res: Array<TreeItem> = []
+    tree.forEach((value: Array<Patient>, key: any) => {
+      const patientNodes: Array<TreeItem> = value.map(p => {
+        return {
+          district: null,
+          patient: p,
+          children: []
+        }
+      })
+      const districtNode = {
+        district: subDistricts.find(sd => sd.id === key) || null,
+        patient: null,
+        children: patientNodes
+      }
+      res.push(districtNode)
+    })
+    return res
+  }, [listData]);
+
+  const [tableData, setTableData] = useState<Array<TreeItem>>([]);
+
+  const [isTableDataLoading, setIsTableDataLoading] = useState(false);
+
+  useEffect(() => {
+    setIsTableDataLoading(true);
+    const loadData = async () => {
+      // TODO get data
+      setTableData(treeItems);
+      setIsTableDataLoading(false);
+    }
+    loadData()
+  }, [treeItems,
+    pagination?.pageIndex,
+    pagination?.pageSize,
+  ]);
+
+  const tableColumns = useMemo<MRT_ColumnDef<TreeItem>[]>(
+    () => [
+      /*{
+        accessorKey: 'children',
+        header: 'Children',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },*/
+      {
+        accessorKey: 'district.name',
+        header: 'District',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'patient.firstName',
+        header: 'First Name',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'patient.lastName',
+        header: 'Last Name',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'patient.birthDate',
+        header: 'Birth Date',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'patient.homeAddress',
+        header: 'Home Address',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+    ],
+    []
+  );
 
   return (
-    <List<ItemType> queryOptions={queryOptions} exporter={false} filters={filters}>
-      <Datagrid rowClick="show">
-        <TextField source="id" sortable={false} />
+    <>
+      <MaterialReactTable<TreeItem>
+        columns={tableColumns}
+        data={tableData}
+        initialState={{
+          density: 'comfortable', pagination: {pageSize: 5, pageIndex: 0}
+        }}
 
-        <TextField source="lastName" sortable={false} />
-        <TextField source="firstName" sortable={false} />
-        <FunctionField
-          label="Sub District"
-          render={(record: Patient) => getSubDistrictRecordRepresentation(record.subDistrict)}
-          sortable={false}
-        />
-        <FunctionField
-          source="birthDate"
-          render={(record: Patient) => renderDate(record.birthDate)}
-        />
-        <TextField source="homeAddress" sortable={false} />
-
-        <EditButton />
-        <DeleteButton
-          mutationMode="pessimistic"
-          mutationOptions={{ meta: { mutation: DELETE_PATIENT } }}
-        />
-      </Datagrid>
-    </List>
+        state={{
+          pagination,
+          isLoading: isTableDataLoading
+        }}
+        manualPagination
+        onPaginationChange={setPagination}
+        getSubRows={(originalRow) => originalRow.children}
+        renderTopToolbarCustomActions={({table}) => (
+          <div>
+            <CreateButton label="Create"/>
+          </div>
+        )}
+        enableRowActions
+        enableExpanding={true}
+        positionActionsColumn="last"
+        renderRowActions={({row}) => (
+          <>
+            {row.original.patient && <EditButton label="Edit" record={row.original.patient}/>}
+          </>
+        )}
+      />
+    </>
   );
 };
-
-/**
- * Type of data object received when executing the query
- */
-type QueryResultType = ResultOf<typeof PATIENT_LIST>;
-/**
- * Type of the items list
- */
-type ItemListType = QueryResultType["patientList"];
-/**
- * Type of single item
- */
-type ItemType = { id: string } & Exclude<
-  Exclude<ItemListType, null | undefined>["content"],
-  undefined
->;

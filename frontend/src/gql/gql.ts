@@ -29,12 +29,12 @@ const documents = {
     types.UpdatePatientDocument,
   "query Patient($id : ID!) {\npatient(id : $id) {\nlastName\nfirstName\nid\nsubDistrict {\n\tid\n}\nbirthDate\nhomeAddress\n}\n}":
     types.PatientDocument,
+  "\nquery PatientList_PatientList($page: OffsetPageInput) {\n    patientList(page: $page) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n    subDistrictList {\n        id\n        name\n    }\n}\n":
+    types.PatientList_PatientListDocument,
   "query PatientList(\n    $filter: PatientFilterInput,\n    $page: OffsetPageInput,\n    $sort: [PatientOrderByInput]\n) {\n    patientList(\n        filter: $filter,\n        page: $page,\n        sort: $sort\n) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n}":
     types.PatientListDocument,
   "mutation DeletePatient($id : ID!) {\ndeletePatient(id : $id)\n}":
     types.DeletePatientDocument,
-  "\nquery PatientList_PatientList($page: OffsetPageInput) {\n    patientList(page: $page) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n    subDistrictList {\n        id\n        name\n    }\n}\n":
-    types.PatientList_PatientListDocument,
   "mutation UpdateSubDistrict($input : SubDistrictInput!) {\nupdateSubDistrict(input : $input) {\ncenterLon\npostcode\nname\nid\ncenterLat\n}\n}":
     types.UpdateSubDistrictDocument,
   "query SubDistrict($id : ID!) {\nsubDistrict(id : $id) {\ncenterLon\npostcode\nname\nid\ncenterLat\n}\n}":
@@ -113,6 +113,12 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
+  source: "\nquery PatientList_PatientList($page: OffsetPageInput) {\n    patientList(page: $page) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n    subDistrictList {\n        id\n        name\n    }\n}\n"
+): (typeof documents)["\nquery PatientList_PatientList($page: OffsetPageInput) {\n    patientList(page: $page) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n    subDistrictList {\n        id\n        name\n    }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
   source: "query PatientList(\n    $filter: PatientFilterInput,\n    $page: OffsetPageInput,\n    $sort: [PatientOrderByInput]\n) {\n    patientList(\n        filter: $filter,\n        page: $page,\n        sort: $sort\n) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n}"
 ): (typeof documents)["query PatientList(\n    $filter: PatientFilterInput,\n    $page: OffsetPageInput,\n    $sort: [PatientOrderByInput]\n) {\n    patientList(\n        filter: $filter,\n        page: $page,\n        sort: $sort\n) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n}"];
 /**
@@ -121,12 +127,6 @@ export function gql(
 export function gql(
   source: "mutation DeletePatient($id : ID!) {\ndeletePatient(id : $id)\n}"
 ): (typeof documents)["mutation DeletePatient($id : ID!) {\ndeletePatient(id : $id)\n}"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(
-  source: "\nquery PatientList_PatientList($page: OffsetPageInput) {\n    patientList(page: $page) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n    subDistrictList {\n        id\n        name\n    }\n}\n"
-): (typeof documents)["\nquery PatientList_PatientList($page: OffsetPageInput) {\n    patientList(page: $page) {\n        content {\n            birthDate\n            firstName\n            homeAddress\n            id\n            lastName\n            subDistrict {\n                id\n                name\n            }\n        }\n        totalElements\n    }\n    subDistrictList {\n        id\n        name\n    }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
