@@ -1,14 +1,36 @@
 import {gql} from "@amplicode/gql";
-import {Patient, SubDistrict} from "@amplicode/gql/graphql";
+import {
+  Patient,
+  PatientFilterInput,
+  PatientOrderByInput,
+  PatientOrderByProperty,
+  Scalars,
+  SortDirection,
+  SubDistrict
+} from "@amplicode/gql/graphql";
 import {CreateButton, EditButton,} from "react-admin";
 import {useQuery} from "@apollo/client";
 import {useEffect, useMemo, useState} from "react";
 import {apolloClient} from "../../../../dataProvider/graphqlDataProvider";
-import {MaterialReactTable, MRT_ColumnDef, MRT_PaginationState} from "material-react-table";
+import {
+  MaterialReactTable,
+  MRT_ColumnDef,
+  MRT_ColumnFiltersState,
+  MRT_PaginationState,
+  MRT_SortingState
+} from "material-react-table";
 
 const PATIENT_LIST_PATIENT_LIST = gql(`
-query PatientList_PatientList($page: OffsetPageInput) {
-    patientList(page: $page) {
+query PatientList_PatientList(
+    $page: OffsetPageInput,
+    $filter: PatientFilterInput,
+    $sort: [PatientOrderByInput]
+) {
+    patientList(
+        filter: $filter,
+        page: $page,
+        sort: $sort
+) {
         content {
             birthDate
             firstName
@@ -30,33 +52,106 @@ query PatientList_PatientList($page: OffsetPageInput) {
 `);
 
 type TreeItem = {
-  district: SubDistrict | null,
   patient: Patient | null,
   children: Array<TreeItem>
+  id: any,
+  district: String | null,
+  firstName: String | null,
+  lastName: String | null,
+  birthDate: Scalars["Date"] | null,
+  homeAddress: String | null
 }
 
 export const PatientList = () => {
-
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
+    pageIndex: 1,
     pageSize: 5,
   });
 
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
+    [],
+  );
+  const [filterValue, setFilterValue] = useState<PatientFilterInput | null>();
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [sortParam, setSortParam] = useState<PatientOrderByInput[]>();
+
+  // transform filter value
+  useEffect(() => {
+    if (columnFilters.length === 0) {
+      setFilterValue(null)
+    } else {
+      const map = new Map<String, any>();
+      columnFilters.forEach(f => {
+        map.set(f.id, f.value);
+      })
+
+      const fv = {
+        firstName: map.get('firstName'),
+        lastName: map.get('lastName'),
+        homeAddress: map.get('homeAddress'),
+        birthDateMin: map.get('birthDate')
+      }
+      setFilterValue(fv)
+    }
+  }, [columnFilters]);
+
+  // transform sortParam value
+
+  useEffect(() => {
+    const map: Record<string, PatientOrderByProperty> = {
+      'firstName': PatientOrderByProperty.FirstName,
+      'lastName': PatientOrderByProperty.LastName,
+      'birthDate': PatientOrderByProperty.BirthDate,
+    }
+
+    const newSortValue: Array<PatientOrderByInput> = sorting.map(cs => {
+      const direction: SortDirection = cs.desc ? SortDirection.Desc : SortDirection.Asc;
+      const prop: PatientOrderByProperty = map[cs.id];
+      return {direction: direction, property: prop}
+    })
+    setSortParam(newSortValue)
+  }, [sorting]);
 
   const {
-    data: listData
+    data: listData,
+    loading: listLoading
   } = useQuery(PATIENT_LIST_PATIENT_LIST, {
     client: apolloClient,
     variables: {
-      page: {number: pagination.pageIndex, size: pagination.pageSize}
+      page: {number: pagination.pageIndex, size: pagination.pageSize},
+      filter: filterValue,
+      sort: sortParam
     }
   });
 
-  const treeItems = useMemo(() => {
+  let [totalRows, setTotalRows] = useState(0);
+
+  //
+  // calculate total count (not precise)
+  //
+  useEffect(() => {
+    if (!listLoading) {
+      const totalPatients = (listData?.patientList?.totalElements) || 0;
+      const totalDistricts = (listData?.subDistrictList?.length || 0);
+      setTotalRows(parseInt(totalPatients) + totalDistricts)
+    }
+  }, [listData?.patientList?.totalElements, listData?.subDistrictList?.length, listLoading]);
+
+  //
+  // calculate tree
+  //
+  const [treeItems, setTreeItems] = useState<Array<TreeItem>>([]);
+  useEffect(() => {
+    if (listLoading) {
+      return;
+    }
+
     const patients = (listData?.patientList?.content || []) as Array<Patient>
     const subDistricts = (listData?.subDistrictList || []) as Array<SubDistrict>
 
     const tree = new Map<any, Array<Patient>>()
+
     patients.forEach(p => {
       const subDistrictId = p.subDistrict?.id || ''
       const existingItem = tree.get(subDistrictId)
@@ -66,80 +161,75 @@ export const PatientList = () => {
         tree.set(subDistrictId, [p])
       }
     })
+
     const res: Array<TreeItem> = []
     tree.forEach((value: Array<Patient>, key: any) => {
       const patientNodes: Array<TreeItem> = value.map(p => {
         return {
+          id: p.id,
           district: null,
           patient: p,
+          firstName: p.firstName,
+          lastName: p.lastName,
+          birthDate: p.birthDate || null,
+          homeAddress: p.homeAddress || null,
           children: []
         }
       })
+      const district = subDistricts.find(sd => sd.id === key) || null
       const districtNode = {
-        district: subDistricts.find(sd => sd.id === key) || null,
+        id: 'district_' + district?.id,
+        district: district?.name || null,
         patient: null,
+        firstName: null,
+        lastName: null,
+        birthDate: null,
+        homeAddress: null,
         children: patientNodes
       }
       res.push(districtNode)
     })
-    return res
-  }, [listData]);
-
-  const [tableData, setTableData] = useState<Array<TreeItem>>([]);
-
-  const [isTableDataLoading, setIsTableDataLoading] = useState(false);
-
-  useEffect(() => {
-    setIsTableDataLoading(true);
-    const loadData = async () => {
-      // TODO get data
-      setTableData(treeItems);
-      setIsTableDataLoading(false);
-    }
-    loadData()
-  }, [treeItems,
-    pagination?.pageIndex,
-    pagination?.pageSize,
-  ]);
+    setTreeItems(res)
+  }, [listLoading, listData]);
 
   const tableColumns = useMemo<MRT_ColumnDef<TreeItem>[]>(
     () => [
+      {
+        accessorKey: 'district',
+        header: 'District',
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'firstName',
+        header: 'First name',
+        enableSorting: true,
+        enableColumnFilter: true,
+      },
+      {
+        accessorKey: 'lastName',
+        header: 'Last name',
+        enableSorting: true,
+        enableColumnFilter: true,
+      },
+      {
+        accessorKey: 'birthDate',
+        header: 'Birth date',
+        enableSorting: true,
+        enableColumnFilter: true,
+      },
+      {
+        accessorKey: 'homeAddress',
+        header: 'Home address',
+        enableSorting: false,
+        enableColumnFilter: true,
+      },
       /*{
         accessorKey: 'children',
         header: 'Children',
         enableSorting: false,
         enableColumnFilter: false,
       },*/
-      {
-        accessorKey: 'district.name',
-        header: 'District',
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'patient.firstName',
-        header: 'First Name',
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'patient.lastName',
-        header: 'Last Name',
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'patient.birthDate',
-        header: 'Birth Date',
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'patient.homeAddress',
-        header: 'Home Address',
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
     ],
     []
   );
@@ -148,17 +238,32 @@ export const PatientList = () => {
     <>
       <MaterialReactTable<TreeItem>
         columns={tableColumns}
-        data={tableData}
+        data={treeItems}
         initialState={{
-          density: 'comfortable', pagination: {pageSize: 5, pageIndex: 0}
+          density: 'compact', pagination: pagination, expanded: true
         }}
-
+        autoResetPageIndex={false}
+        muiTableBodyProps={{
+          sx: {
+            '& tr:nth-of-type(odd)': {
+              backgroundColor: '#EFEFEF',
+            },
+          },
+        }}
         state={{
+          columnFilters,
           pagination,
-          isLoading: isTableDataLoading
+          sorting,
+          isLoading: listLoading
         }}
+        manualFiltering
+        onColumnFiltersChange={setColumnFilters}
+        manualSorting
+        onSortingChange={setSorting}
+        enableExpanding={true}
         manualPagination
         onPaginationChange={setPagination}
+        rowCount={totalRows}
         getSubRows={(originalRow) => originalRow.children}
         renderTopToolbarCustomActions={({table}) => (
           <div>
@@ -166,7 +271,6 @@ export const PatientList = () => {
           </div>
         )}
         enableRowActions
-        enableExpanding={true}
         positionActionsColumn="last"
         renderRowActions={({row}) => (
           <>

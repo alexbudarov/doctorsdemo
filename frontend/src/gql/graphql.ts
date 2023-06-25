@@ -473,6 +473,10 @@ export type PatientQuery = {
 
 export type PatientList_PatientListQueryVariables = Exact<{
   page?: InputMaybe<OffsetPageInput>;
+  filter?: InputMaybe<PatientFilterInput>;
+  sort?: InputMaybe<
+    Array<InputMaybe<PatientOrderByInput>> | InputMaybe<PatientOrderByInput>
+  >;
 }>;
 
 export type PatientList_PatientListQuery = {
@@ -1259,6 +1263,28 @@ export const PatientList_PatientListDocument = {
             name: { kind: "Name", value: "OffsetPageInput" },
           },
         },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "filter" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "PatientFilterInput" },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "sort" } },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "PatientOrderByInput" },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -1269,10 +1295,26 @@ export const PatientList_PatientListDocument = {
             arguments: [
               {
                 kind: "Argument",
+                name: { kind: "Name", value: "filter" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "filter" },
+                },
+              },
+              {
+                kind: "Argument",
                 name: { kind: "Name", value: "page" },
                 value: {
                   kind: "Variable",
                   name: { kind: "Name", value: "page" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "sort" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "sort" },
                 },
               },
             ],
