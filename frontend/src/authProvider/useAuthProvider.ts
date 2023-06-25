@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import { AuthProvider } from "react-admin";
-import { useAuth } from "react-oidc-context";
-import { oidcKeycloakAuthProvider } from "./oidcKeycloakAuthProvider";
+import { authProvider as defaultAuthProvider } from "./authProvider";
 
 type UseAuthProvider = {
   loading: boolean;
   authProvider?: AuthProvider;
 };
 
+// TODO explain why we add this
 export function useAuthProvider(): UseAuthProvider {
-  const auth = useAuth();
   const [authProvider, setAuthProvider] = useState<AuthProvider>();
 
   useEffect(() => {
-    setAuthProvider(oidcKeycloakAuthProvider(auth));
-  }, [auth]);
+    setAuthProvider(defaultAuthProvider);
+  }, []);
 
   return {
     authProvider,
-    loading: auth.isLoading,
+    loading: false,
   };
 }
