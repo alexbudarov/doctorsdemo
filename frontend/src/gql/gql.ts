@@ -13,6 +13,14 @@ import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+  "mutation UpdateDoctor($input : DoctorInput!) {\nupdateDoctor(input : $input) {\nlastName\nfirstName\nid\n}\n}":
+    types.UpdateDoctorDocument,
+  "query Doctor($id : ID!) {\ndoctor(id : $id) {\nlastName\nfirstName\nid\n}\n}":
+    types.DoctorDocument,
+  "query DoctorList($filter : DoctorFilterInput, $page : OffsetPageInput, $sort : [DoctorOrderByInput]) {\ndoctorList(filter : $filter, page : $page, sort : $sort) {\ncontent {\n\tlastName\n\tfirstName\n\tid\n}\ntotalElements\n}\n}":
+    types.DoctorListDocument,
+  "mutation DeleteDoctor($id : ID!) {\ndeleteDoctor(id : $id)\n}":
+    types.DeleteDoctorDocument,
   "mutation UpdatePatient($input: PatientInput!) {\n  updatePatient(input: $input) {\n    firstName\n    id\n    lastName\n  }\n}":
     types.UpdatePatientDocument,
   "query Patient($id: ID!) {\n  patient(id: $id) {\n    firstName\n    id\n    lastName\n  }\n}":
@@ -37,6 +45,30 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "mutation UpdateDoctor($input : DoctorInput!) {\nupdateDoctor(input : $input) {\nlastName\nfirstName\nid\n}\n}"
+): (typeof documents)["mutation UpdateDoctor($input : DoctorInput!) {\nupdateDoctor(input : $input) {\nlastName\nfirstName\nid\n}\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "query Doctor($id : ID!) {\ndoctor(id : $id) {\nlastName\nfirstName\nid\n}\n}"
+): (typeof documents)["query Doctor($id : ID!) {\ndoctor(id : $id) {\nlastName\nfirstName\nid\n}\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "query DoctorList($filter : DoctorFilterInput, $page : OffsetPageInput, $sort : [DoctorOrderByInput]) {\ndoctorList(filter : $filter, page : $page, sort : $sort) {\ncontent {\n\tlastName\n\tfirstName\n\tid\n}\ntotalElements\n}\n}"
+): (typeof documents)["query DoctorList($filter : DoctorFilterInput, $page : OffsetPageInput, $sort : [DoctorOrderByInput]) {\ndoctorList(filter : $filter, page : $page, sort : $sort) {\ncontent {\n\tlastName\n\tfirstName\n\tid\n}\ntotalElements\n}\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: "mutation DeleteDoctor($id : ID!) {\ndeleteDoctor(id : $id)\n}"
+): (typeof documents)["mutation DeleteDoctor($id : ID!) {\ndeleteDoctor(id : $id)\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
