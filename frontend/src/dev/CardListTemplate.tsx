@@ -1,17 +1,20 @@
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { Card, CardActions, CardContent, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
+  Button,
   CreateButton,
+  EditButton,
   ExportButton,
   FilterButton,
   FilterForm,
   ListContextProvider,
   Pagination,
+  ShowButton,
   SortButton,
   TextInput,
   TopToolbar,
   useList,
-  UseListValue,
+  UseListValue
 } from "react-admin";
 
 export const CardListTemplate = () => {
@@ -48,9 +51,23 @@ export const CardListTemplate = () => {
   }, [listContext.page, listContext.perPage]);
   /*vtl #end */
 
+  /*vtl
+  #if ($card.actions.size() > 0)
+    #set($toolbarActionPresent = false)
+    #foreach($action in $card.actions)
+      #if ($action.id == "create" || $action.id == "export")
+        #set($toolbarActionPresent = true)
+        #break
+      #end
+    #end
+  #end
+  */
+
   return (
     <ListContextProvider value={listContext}>
-      {/*vtl #if ($card.filterProperties.size() > 0 || $card.sortProperties.size() > 0 || $card.actions.size()>0 ) */}
+      {/*vtl #if ($card.filterProperties.size() > 0
+                || $card.sortProperties.size() > 0
+                || $toolbarActionPresent) */}
       <TopToolbar>
         {/*vtl #if ($card.filterProperties.size() > 0)*/}
         <FilterForm /*vtl filters={[
@@ -89,7 +106,7 @@ export const CardListTemplate = () => {
       </TopToolbar>
       {/*vtl #end */}
       {/*vtl
-      {#if($card.itemsVariableName)${card.itemsVariableName}#else data#end.map((item =>
+      {#if($card.itemsVariableName)(${card.itemsVariableName} || [])#else (data || [])#end.map((item =>
       <Card sx={{margin:'12px'}}>
         <CardContent>
           #if ($card.titleProperty)
@@ -129,6 +146,10 @@ export const CardListTemplate = () => {
       <Card />
       <CardContent />
       <Typography />
+      <CardActions />
+      <ShowButton/>
+      <EditButton/>
+      <Button/>
       {/*vtl #end */}
     </ListContextProvider>
   );

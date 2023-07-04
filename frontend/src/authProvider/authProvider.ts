@@ -1,10 +1,19 @@
+import { gql } from "@amplicode/gql";
 import axios from "axios";
 import { GraphQLError } from "graphql";
 import qs from "qs";
 import { AuthProvider } from "react-admin";
+import { apolloClient } from "../core/apollo/client";
 
 export const TOKEN_KEY = "refine-auth";
+export const PERMISSIONS_KEY = "refine-permissions";
+
 const LOGIN_URI = "/login";
+const USER_PERMISSIONS = gql(`
+     query userPermissions {
+         userPermissions
+     }
+`);
 
 export const authProvider: AuthProvider = {
   login: async ({ username, _email, password }) => {
@@ -24,6 +33,7 @@ export const authProvider: AuthProvider = {
   },
   logout: () => {
     localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(PERMISSIONS_KEY);
     return Promise.resolve();
   },
   checkError: async (error) => {
@@ -61,7 +71,23 @@ export const authProvider: AuthProvider = {
 
     return Promise.reject();
   },
-  getPermissions: () => Promise.resolve(),
+  getPermissions: async (): Promise<string | null> => {
+    let permissions: string | null = localStorage.getItem(PERMISSIONS_KEY);
+    if (permissions != null) {
+      return JSON.parse(permissions);
+    }
+
+    const authorities = await apolloClient
+      .mutate({ mutation: USER_PERMISSIONS })
+      .catch((err) => console.log("Error while loading user permissions: ", err));
+
+    permissions = authorities?.data?.userPermissions as string | null;
+    if (permissions != null) {
+      localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(permissions));
+    }
+
+    return Promise.resolve(permissions);
+  },
   getUserIdentity: async () => {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) {

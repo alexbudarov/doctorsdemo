@@ -51,9 +51,21 @@ export const GridCardListTemplate = () => {
   }, [listContext.page, listContext.perPage]);
   /*vtl #end */
 
+  /*vtl
+  #if ($card.actions.size() > 0)
+    #set($toolbarActionPresent = false)
+    #foreach($action in $card.actions)
+      #if ($action.id == "create" || $action.id == "export")
+        #set($toolbarActionPresent = true)
+        #break
+      #end
+    #end
+  #end
+  */
+
   return (
     <ListContextProvider value={listContext}>
-      {/*vtl #if ($card.filterProperties.size() > 0 || $card.sortProperties.size() > 0 || $card.actions.size()>0 ) */}
+      {/*vtl #if ($card.filterProperties.size() > 0 || $card.sortProperties.size() > 0 || $toolbarActionPresent ) */}
       <TopToolbar>
         {/*vtl #if ($card.filterProperties.size() > 0)*/}
         <FilterForm /*vtl filters={[
@@ -93,7 +105,7 @@ export const GridCardListTemplate = () => {
       {/*vtl #end */}
       <Grid container spacing="12">
         {/*vtl
-      {#if($card.itemsVariableName)${card.itemsVariableName}#else data#end.map((item =>
+      {#if($card.itemsVariableName)(${card.itemsVariableName} || [])#else (data || [])#end.map((item =>
       <Grid item xs={12} sm={6} md={4}>
         <Card>
           <CardContent>
@@ -114,11 +126,11 @@ export const GridCardListTemplate = () => {
           <CardActions>
             #foreach($action in $card.actions)
             #if ($action.type == 'edit')
-            <EditButton label="$action.label" record={item}/>
+            <EditButton label="$action.label" record={item} onClick={() => {alert('TODO: specify resource or implement custom edit logic')}}/>
             #elseif ($action.type == 'show')
-            <ShowButton label="$action.label" record={item}/>
+            <ShowButton label="$action.label" record={item} onClick={() => {alert('TODO: specify resource or implement custom show logic')}}/>
             #elseif ($action.type == 'custom')
-            <Button label="$action.label"/>
+            <Button label="$action.label" onClick={() => {alert('TODO: implement custom action logic')}}/>
             #end
             #end
           </CardActions>

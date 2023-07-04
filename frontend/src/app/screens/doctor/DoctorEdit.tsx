@@ -1,23 +1,27 @@
 import { gql } from "@amplicode/gql";
+import { Specialty } from "@amplicode/gql/graphql";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { useCallback } from "react";
 import { Edit, SimpleForm, TextInput, useNotify, useRedirect, useUpdate } from "react-admin";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { checkServerValidationErrors } from "../../../core/error/checkServerValidationError";
+import { EnumInput } from "../../../core/inputs/EnumInput";
 
-const DOCTOR = gql(`query Doctor($id : ID!) {
-doctor(id : $id) {
-lastName
-firstName
-id
-}
+const DOCTOR = gql(`query Doctor($id: ID!) {
+  doctor(id: $id) {
+    firstName
+    id
+    lastName
+    specialty
+  }
 }`);
-const UPDATE_DOCTOR = gql(`mutation UpdateDoctor($input : DoctorInput!) {
-updateDoctor(input : $input) {
-lastName
-firstName
-id
-}
+const UPDATE_DOCTOR = gql(`mutation UpdateDoctor($input: DoctorInput!) {
+  updateDoctor(input: $input) {
+    firstName
+    id
+    lastName
+    specialty
+  }
 }`);
 
 export const DoctorEdit = () => {
@@ -53,8 +57,9 @@ export const DoctorEdit = () => {
   return (
     <Edit<ItemType> mutationMode="pessimistic" queryOptions={queryOptions}>
       <SimpleForm onSubmit={save}>
-        <TextInput source="lastName" name="lastName" />
         <TextInput source="firstName" name="firstName" />
+        <TextInput source="lastName" name="lastName" />
+        <EnumInput name="specialty" source="specialty" enumTypeName="Specialty" enum={Specialty} />
       </SimpleForm>
     </Edit>
   );

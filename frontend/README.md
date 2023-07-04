@@ -1,4 +1,4 @@
-# Doctos Demo
+# Doctors App
 
 This project based on [React Admin](https://marmelab.com/react-admin/) framework 
 and generated via Amplicode Frontend Code Generator. \

@@ -1,16 +1,19 @@
 import { gql } from "@amplicode/gql";
+import { Specialty } from "@amplicode/gql/graphql";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { useCallback } from "react";
 import { Create, SimpleForm, TextInput, useCreate, useNotify, useRedirect } from "react-admin";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { checkServerValidationErrors } from "../../../core/error/checkServerValidationError";
+import { EnumInput } from "../../../core/inputs/EnumInput";
 
-const UPDATE_DOCTOR = gql(`mutation UpdateDoctor($input : DoctorInput!) {
-updateDoctor(input : $input) {
-lastName
-firstName
-id
-}
+const UPDATE_DOCTOR = gql(`mutation UpdateDoctor($input: DoctorInput!) {
+  updateDoctor(input: $input) {
+    firstName
+    id
+    lastName
+    specialty
+  }
 }`);
 
 export const DoctorCreate = () => {
@@ -39,19 +42,21 @@ export const DoctorCreate = () => {
   return (
     <Create<ItemType> redirect="list">
       <SimpleForm onSubmit={save}>
-        <TextInput source="lastName" name="lastName" />
         <TextInput source="firstName" name="firstName" />
+        <TextInput source="lastName" name="lastName" />
+        <EnumInput name="specialty" source="specialty" enumTypeName="Specialty" enum={Specialty} />
       </SimpleForm>
     </Create>
   );
 };
 
-const DOCTOR_TYPE = gql(`query Doctor($id : ID!) {
-doctor(id : $id) {
-lastName
-firstName
-id
-}
+const DOCTOR_TYPE = gql(`query Doctor($id: ID!) {
+  doctor(id: $id) {
+    firstName
+    id
+    lastName
+    specialty
+  }
 }`);
 
 /**

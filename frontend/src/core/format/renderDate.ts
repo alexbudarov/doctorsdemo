@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
 
 export function renderDate(date: string) {
-  return date == null || date === "" ? "" : dayjs(date).format("MMMM D, YYYY h:mm A");
+  return date == null || date === "" ? "" : dayjs(date).format("MMMM D, YYYY");
 }

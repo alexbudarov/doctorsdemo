@@ -11,8 +11,6 @@ directive @pastOrPresent on INPUT_FIELD_DEFINITION
 
 directive @positiveOrZero on INPUT_FIELD_DEFINITION
 
-directive @javaType(name: String!) on SCALAR
-
 directive @size(max: Int = 2147483647, min: Int = 0) on INPUT_FIELD_DEFINITION
 
 directive @null on INPUT_FIELD_DEFINITION
@@ -46,6 +44,8 @@ directive @future on INPUT_FIELD_DEFINITION
 directive @digits(fraction: Int!, integer: Int!) on INPUT_FIELD_DEFINITION
 
 directive @decimalMin(inclusive: Boolean = true, value: String!) on INPUT_FIELD_DEFINITION
+
+directive @javaType(name: String!) on SCALAR | OBJECT | INPUT_OBJECT
 
 type Appointment {
   doctor: Doctor
@@ -105,10 +105,10 @@ type Query {
   appointment(id: ID!): Appointment!
   appointmentList(filter: AppointmentFilterInput, page: OffsetPageInput, sort: [AppointmentOrderByInput]): AppointmentResultPage!
   doctor(id: ID!): Doctor!
-  doctorFullList: [Doctor]!
+  doctorFullList: [Doctor]
   doctorList(filter: DoctorFilterInput, page: OffsetPageInput, sort: [DoctorOrderByInput]): DoctorResultPage!
   patient(id: ID!): Patient!
-  patientFullList: [Patient]!
+  patientFullList: [Patient]
   patientList(filter: PatientFilterInput, page: OffsetPageInput, sort: [PatientOrderByInput]): PatientResultPage!
   userInfo: UserInfo
   userPermissions: [String]
@@ -134,6 +134,7 @@ enum AppointmentStatus {
 
 enum DoctorOrderByProperty {
   FIRST_NAME
+  ID
   LAST_NAME
 }
 
@@ -200,6 +201,7 @@ input AppointmentRequestInput {
 input DoctorFilterInput {
   firstName: String
   lastName: String
+  specialty: Specialty
 }
 
 input DoctorInput {

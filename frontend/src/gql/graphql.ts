@@ -98,6 +98,7 @@ export type Doctor = {
 export type DoctorFilterInput = {
   firstName?: InputMaybe<Scalars["String"]>;
   lastName?: InputMaybe<Scalars["String"]>;
+  specialty?: InputMaybe<Specialty>;
 };
 
 export type DoctorInput = {
@@ -114,6 +115,7 @@ export type DoctorOrderByInput = {
 
 export enum DoctorOrderByProperty {
   FirstName = "FIRST_NAME",
+  Id = "ID",
   LastName = "LAST_NAME",
 }
 
@@ -201,12 +203,13 @@ export type Query = {
   appointment: Appointment;
   appointmentList: AppointmentResultPage;
   doctor: Doctor;
-  doctorFullList: Array<Maybe<Doctor>>;
+  doctorFullList?: Maybe<Array<Maybe<Doctor>>>;
   doctorList: DoctorResultPage;
   patient: Patient;
-  patientFullList: Array<Maybe<Patient>>;
+  patientFullList?: Maybe<Array<Maybe<Patient>>>;
   patientList: PatientResultPage;
   userInfo?: Maybe<UserInfo>;
+  userPermissions?: Maybe<Array<Maybe<Scalars["String"]>>>;
 };
 
 export type QueryAppointmentArgs = {
@@ -266,9 +269,10 @@ export type UpdateDoctorMutation = {
   __typename?: "Mutation";
   updateDoctor: {
     __typename?: "Doctor";
-    lastName: string;
     firstName: string;
     id?: string | null;
+    lastName: string;
+    specialty?: Specialty | null;
   };
 };
 
@@ -280,18 +284,19 @@ export type DoctorQuery = {
   __typename?: "Query";
   doctor: {
     __typename?: "Doctor";
-    lastName: string;
     firstName: string;
     id?: string | null;
+    lastName: string;
+    specialty?: Specialty | null;
   };
 };
 
 export type DoctorListQueryVariables = Exact<{
-  filter?: InputMaybe<DoctorFilterInput>;
   page?: InputMaybe<OffsetPageInput>;
   sort?: InputMaybe<
     Array<InputMaybe<DoctorOrderByInput>> | InputMaybe<DoctorOrderByInput>
   >;
+  filter?: InputMaybe<DoctorFilterInput>;
 }>;
 
 export type DoctorListQuery = {
@@ -301,9 +306,10 @@ export type DoctorListQuery = {
     totalElements: any;
     content?: Array<{
       __typename?: "Doctor";
-      lastName: string;
       firstName: string;
       id?: string | null;
+      lastName: string;
+      specialty?: Specialty | null;
     } | null> | null;
   };
 };
@@ -376,6 +382,13 @@ export type DeletePatientMutation = {
   deletePatient?: any | null;
 };
 
+export type UserPermissionsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserPermissionsQuery = {
+  __typename?: "Query";
+  userPermissions?: Array<string | null> | null;
+};
+
 export const UpdateDoctorDocument = {
   kind: "Document",
   definitions: [
@@ -418,9 +431,10 @@ export const UpdateDoctorDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "Field", name: { kind: "Name", value: "lastName" } },
                 { kind: "Field", name: { kind: "Name", value: "firstName" } },
                 { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "specialty" } },
               ],
             },
           },
@@ -468,9 +482,10 @@ export const DoctorDocument = {
             selectionSet: {
               kind: "SelectionSet",
               selections: [
-                { kind: "Field", name: { kind: "Name", value: "lastName" } },
                 { kind: "Field", name: { kind: "Name", value: "firstName" } },
                 { kind: "Field", name: { kind: "Name", value: "id" } },
+                { kind: "Field", name: { kind: "Name", value: "lastName" } },
+                { kind: "Field", name: { kind: "Name", value: "specialty" } },
               ],
             },
           },
@@ -487,17 +502,6 @@ export const DoctorListDocument = {
       operation: "query",
       name: { kind: "Name", value: "DoctorList" },
       variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "filter" },
-          },
-          type: {
-            kind: "NamedType",
-            name: { kind: "Name", value: "DoctorFilterInput" },
-          },
-        },
         {
           kind: "VariableDefinition",
           variable: { kind: "Variable", name: { kind: "Name", value: "page" } },
@@ -517,6 +521,17 @@ export const DoctorListDocument = {
             },
           },
         },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "filter" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DoctorFilterInput" },
+          },
+        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -525,14 +540,6 @@ export const DoctorListDocument = {
             kind: "Field",
             name: { kind: "Name", value: "doctorList" },
             arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "filter" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "filter" },
-                },
-              },
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "page" },
@@ -549,6 +556,14 @@ export const DoctorListDocument = {
                   name: { kind: "Name", value: "sort" },
                 },
               },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filter" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "filter" },
+                },
+              },
             ],
             selectionSet: {
               kind: "SelectionSet",
@@ -561,13 +576,17 @@ export const DoctorListDocument = {
                     selections: [
                       {
                         kind: "Field",
+                        name: { kind: "Name", value: "firstName" },
+                      },
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
                         name: { kind: "Name", value: "lastName" },
                       },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "firstName" },
+                        name: { kind: "Name", value: "specialty" },
                       },
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
                     ],
                   },
                 },
@@ -873,4 +892,23 @@ export const DeletePatientDocument = {
 } as unknown as DocumentNode<
   DeletePatientMutation,
   DeletePatientMutationVariables
+>;
+export const UserPermissionsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "userPermissions" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "userPermissions" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UserPermissionsQuery,
+  UserPermissionsQueryVariables
 >;

@@ -13,6 +13,6 @@ export const i18nProvider = polyglotI18nProvider(
   "en", // default locale
   [
     { locale: "en", name: "English" },
-    { locale: "ru", name: "Russian" },
+    { locale: "ru", name: "Русский" },
   ]
 );

@@ -1,7 +1,7 @@
 {
   "name": "doctorsdemo-generation",
   "devDependencies": {
-    "@amplicode/codegen": "0.43.0"
+    "@amplicode/codegen": "0.46.0"
   },
   "scripts": {
     "postinstall": "npm run listGenerators",

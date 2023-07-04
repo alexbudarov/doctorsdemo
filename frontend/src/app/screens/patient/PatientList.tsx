@@ -41,7 +41,7 @@ export const PatientList = () => {
 
   return (
     <List<ItemType> queryOptions={queryOptions} exporter={false} filters={filters}>
-      <Datagrid rowClick="show">
+      <Datagrid rowClick="show" bulkActionButtons={false}>
         <TextField source="id" sortable={false} />
 
         <TextField source="firstName" />

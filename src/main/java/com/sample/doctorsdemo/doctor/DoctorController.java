@@ -54,13 +54,12 @@ public class DoctorController {
     @QueryMapping(name = "doctorList")
     @Transactional(readOnly = true)
     @NonNull
-    public ResultPage<Doctor> findAll(@Argument DoctorFilter filter, @Argument("sort") List<DoctorOrderByInput> sortInput, @Argument("page") OffsetPageInput pageInput) {
-        Specification<Doctor> specification = createFilter(filter);
-        Pageable page = Optional.ofNullable(pageInput)
-                .map(p -> PageRequest.of(p.getNumber(), p.getSize()).withSort(createSort(sortInput)))
-                .orElseGet(() -> PageRequest.ofSize(20).withSort(createSort(sortInput)));
-        Page<Doctor> pageData = crudRepository.findAll(specification, page);
-        return ResultPage.page(pageData.getContent(), pageData.getTotalElements());
+    public ResultPage<Doctor> findAll(@Argument OffsetPageInput page, @Argument List<DoctorOrderByInput> sort, @Argument DoctorFilter filter) {
+        Pageable pageable = Optional.ofNullable(page)
+                .map(p -> PageRequest.of(p.getNumber(), p.getSize()).withSort(createSort(sort)))
+                .orElseGet(() -> PageRequest.ofSize(20).withSort(createSort(sort)));
+        Page<Doctor> result = crudRepository.findAll(createFilter(filter), pageable);
+        return ResultPage.page(result.getContent(), result.getTotalElements());
     }
 
     @Secured({Authorities.FULL_ACCESS, "ROLE_USER"})
@@ -99,6 +98,8 @@ public class DoctorController {
                         direction = Sort.Direction.DESC;
                     }
                     switch (item.getProperty()) {
+                        case ID:
+                            return Sort.Order.by("id").with(direction);
                         case FIRST_NAME:
                             return Sort.Order.by("firstName").with(direction);
                         case LAST_NAME:
@@ -136,7 +137,7 @@ public class DoctorController {
 
     public enum SortDirection {ASC, DESC}
 
-    public enum DoctorOrderByProperty {FIRST_NAME, LAST_NAME}
+    public enum DoctorOrderByProperty {ID, FIRST_NAME, LAST_NAME}
 
     protected Specification<Doctor> createFilter(DoctorFilter filter) {
         return (root, query, criteriaBuilder) -> {
@@ -148,6 +149,9 @@ public class DoctorController {
                 if (filter.lastName != null) {
                     predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + filter.lastName.toLowerCase() + "%"));
                 }
+                if (filter.specialty != null) {
+                    predicates.add(criteriaBuilder.equal(root.get("specialty"), filter.specialty));
+                }
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
@@ -157,6 +161,7 @@ public class DoctorController {
 
         private String firstName;
         private String lastName;
+        private Specialty specialty;
 
         public String getFirstName() {
             return firstName;
@@ -172,6 +177,14 @@ public class DoctorController {
 
         public void setLastName(String lastName) {
             this.lastName = lastName;
+        }
+
+        public Specialty getSpecialty() {
+            return specialty;
+        }
+
+        public void setSpecialty(Specialty specialty) {
+            this.specialty = specialty;
         }
     }
 }

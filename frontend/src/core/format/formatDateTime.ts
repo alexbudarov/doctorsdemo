@@ -5,6 +5,6 @@ import dayjs from "dayjs";
  * and returning the input value (which should be a string).
  * https://marmelab.com/react-admin/Inputs.html#format
  */
-export function formatDate(value: string | null): string {
-  return value == null || value === "" ? "" : dayjs(+value).format("YYYY-MM-DD");
+export function formatDateTime(value: string | null): string {
+  return value == null || value === "" ? "" : dayjs(+value).format("YYYY-MM-DDTHH:mm:ss");
 }

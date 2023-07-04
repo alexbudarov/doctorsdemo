@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   Button,
@@ -52,9 +52,21 @@ export const SimpleCardListTemplate = () => {
   }, [listContext.page, listContext.perPage]);
   /*vtl #end */
 
+  /*vtl
+  #if ($card.actions.size() > 0)
+    #set($toolbarActionPresent = false)
+    #foreach($action in $card.actions)
+      #if ($action.id == "create" || $action.id == "export")
+        #set($toolbarActionPresent = true)
+        #break
+      #end
+    #end
+  #end
+  */
+
   return (
     <ListContextProvider value={listContext}>
-      {/*vtl #if ($card.filterProperties.size() > 0 || $card.sortProperties.size() > 0 || $card.actions.size()>0 ) */}
+      {/*vtl #if ($card.filterProperties.size() > 0 || $card.sortProperties.size() > 0 || $toolbarActionPresent ) */}
       <TopToolbar>
         {/*vtl #if ($card.filterProperties.size() > 0)*/}
         <FilterForm /*vtl filters={[
@@ -85,8 +97,6 @@ export const SimpleCardListTemplate = () => {
           {/*vtl #foreach($action in $card.actions) */}
           {/*vtl #if($action.type == 'create') */}
           <CreateButton /*vtl label="$action.label"*/ />
-          {/*vtl #elseif ($action.type == 'custom') */}
-          <Button label="$action.label" />
           {/*vtl #elseif($action.type == 'export') */}
           <ExportButton /*vtl label="$action.label"*/ />
           {/*vtl #end */}
@@ -118,25 +128,25 @@ export const SimpleCardListTemplate = () => {
              <EditButton label="$action.label" record={record} onClick={() => {alert('TODO: specify resource or implement custom edit logic')}}/>
              #elseif($action.type == 'show')
              <ShowButton label="$action.label" record={record} onClick={() => {alert('TODO: specify resource or implement custom show logic')}}/>
+             #elseif ($action.type == 'custom')
+             <Button label="$action.label" onClick={() => {alert('TODO: implement custom action logic')}}/>
              #end
             #end*/}
           </div>
         )}
         linkType={false}
-        rowStyle={(_, index) => ({ backgroundColor: index % 2 === 0 ? "inherit" : "#EFEFEF" })}
+        rowStyle={(_, index) => ({ borderTop: index !== 0 ?  "1px solid #EFEFEF" : "inherit"})}
       />
       {/*vtl #if ($card.pagination) */}
       <Pagination /*vtl #if($card.rowsPerPage) rowsPerPageOptions={[$card.rowsPerPage]} #end */ />
       {/*vtl #end */}
       {/*vtl #if (false) */}
       <TextInput source="undefined" />
-      <Card />
-      <CardContent />
-      <CardActions />
       <Typography />
       <EditButton />
       <ShowButton />
       <Button />
+      <Grid/>
       {/*vtl #end */}
     </ListContextProvider>
   );

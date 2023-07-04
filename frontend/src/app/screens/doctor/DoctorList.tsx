@@ -1,21 +1,31 @@
 import { gql } from "@amplicode/gql";
+import { Specialty } from "@amplicode/gql/graphql";
 import { ResultOf } from "@graphql-typed-document-node/core";
 import { Datagrid, DeleteButton, EditButton, List, TextField, TextInput } from "react-admin";
+import { EnumField } from "../../../core/fields/EnumField";
 
-const DOCTOR_LIST =
-  gql(`query DoctorList($filter : DoctorFilterInput, $page : OffsetPageInput, $sort : [DoctorOrderByInput]) {
-doctorList(filter : $filter, page : $page, sort : $sort) {
-content {
-	lastName
-	firstName
-	id
-}
-totalElements
-}
+const DOCTOR_LIST = gql(`query DoctorList(
+  $page: OffsetPageInput
+  $sort: [DoctorOrderByInput]
+  $filter: DoctorFilterInput
+) {
+  doctorList(
+    page: $page
+    sort: $sort
+    filter: $filter
+  ) {
+    content {
+      firstName
+      id
+      lastName
+      specialty
+    }
+    totalElements
+  }
 }`);
 
-const DELETE_DOCTOR = gql(`mutation DeleteDoctor($id : ID!) {
-deleteDoctor(id : $id)
+const DELETE_DOCTOR = gql(`mutation DeleteDoctor($id: ID!) {
+  deleteDoctor(id: $id) 
 }`);
 
 export const DoctorList = () => {
@@ -28,17 +38,19 @@ export const DoctorList = () => {
   };
 
   const filters = [
-    <TextInput source="lastName" name="lastName" />,
     <TextInput source="firstName" name="firstName" />,
+    <TextInput source="lastName" name="lastName" />,
+    <TextInput source="specialty" name="specialty" />,
   ];
 
   return (
     <List<ItemType> queryOptions={queryOptions} exporter={false} filters={filters}>
-      <Datagrid rowClick="show">
+      <Datagrid rowClick="show" bulkActionButtons={false}>
         <TextField source="id" sortable={false} />
 
+        <TextField source="firstName" sortable={false} />
         <TextField source="lastName" />
-        <TextField source="firstName" />
+        <EnumField source="specialty" enumTypeName="Specialty" enum={Specialty} sortable={false} />
 
         <EditButton />
         <DeleteButton

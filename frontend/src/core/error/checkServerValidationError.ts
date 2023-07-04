@@ -11,10 +11,14 @@ export const checkServerValidationErrors = (response: any, notify: NotifyFunctio
 
     if (errors[0]?.extensions?.path?.length && errors[0]?.extensions?.path?.length > 0) {
       const message = errors[0].message;
-      const path = errors[0].extensions.path[0];
 
-      if (path.length > 0) {
-        return { [path]: message };
+      const paths: string[] = errors[0].extensions.path;
+      // path array could also contain object name (like "input")
+      // so, we use the last item of path array as form input field name
+      const formInputName: string | undefined = paths.pop();
+
+      if (formInputName != null && formInputName.length > 0) {
+        return { [formInputName]: message };
       } else {
         notify(message, { type: "error" });
       }
