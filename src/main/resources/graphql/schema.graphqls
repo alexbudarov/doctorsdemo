@@ -117,6 +117,7 @@ type Query {
   patientFullList: [Patient]!
   patientList(filter: PatientFilterInput, page: OffsetPageInput, sort: [PatientOrderByInput]): PatientResultPage!
   userInfo: UserInfo
+  userPermissions: [String]
 }
 
 type UserInfo {
