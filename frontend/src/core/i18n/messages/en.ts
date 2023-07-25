@@ -1,7 +1,8 @@
 import { TranslationMessages } from "ra-core";
 import englishMessages from "ra-language-english";
+import { mergeMessages } from "./mergeMessages";
 
-export const en: TranslationMessages = {
+const messages: TranslationMessages = {
   ...englishMessages,
 
   resources: {
@@ -36,3 +37,8 @@ export const en: TranslationMessages = {
     }
   }
 };
+
+export const en = mergeMessages(
+  messages,
+  [] // place addon messages here
+);

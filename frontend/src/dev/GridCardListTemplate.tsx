@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   Button,
   CreateButton,
+  DeleteButton,
   EditButton,
   ExportButton,
   FilterButton,
@@ -14,7 +15,7 @@ import {
   TextInput,
   TopToolbar,
   useList,
-  UseListValue,
+  UseListValue
 } from "react-admin";
 
 export const GridCardListTemplate = () => {
@@ -106,7 +107,7 @@ export const GridCardListTemplate = () => {
       <Grid container spacing="12">
         {/*vtl
       {#if($card.itemsVariableName)(${card.itemsVariableName} || [])#else (data || [])#end.map((item =>
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={12} sm={6} md={4} #if ($card.keyProperty) key={item.$card.keyProperty.name} #end>
         <Card>
           <CardContent>
             #if ($card.titleProperty)
@@ -129,6 +130,8 @@ export const GridCardListTemplate = () => {
             <EditButton label="$action.label" record={item} onClick={() => {alert('TODO: specify resource or implement custom edit logic')}}/>
             #elseif ($action.type == 'show')
             <ShowButton label="$action.label" record={item} onClick={() => {alert('TODO: specify resource or implement custom show logic')}}/>
+            #elseif ($action.type == 'delete')
+            <DeleteButton label="$action.label" record={item} onClick={() => {alert('TODO: specify resource or implement custom deletion logic')}}/>
             #elseif ($action.type == 'custom')
             <Button label="$action.label" onClick={() => {alert('TODO: implement custom action logic')}}/>
             #end
@@ -151,6 +154,7 @@ export const GridCardListTemplate = () => {
       <Typography />
       <EditButton />
       <ShowButton />
+      <DeleteButton/>
       <Button />
       {/*vtl #end */}
     </ListContextProvider>

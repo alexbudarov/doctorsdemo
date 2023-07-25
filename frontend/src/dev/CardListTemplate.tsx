@@ -2,7 +2,7 @@ import { Card, CardActions, CardContent, Stack, Typography } from "@mui/material
 import { useEffect, useState } from "react";
 import {
   Button,
-  CreateButton,
+  CreateButton, DeleteButton,
   EditButton,
   ExportButton,
   FilterButton,
@@ -107,7 +107,7 @@ export const CardListTemplate = () => {
       {/*vtl #end */}
       {/*vtl
       {#if($card.itemsVariableName)(${card.itemsVariableName} || [])#else (data || [])#end.map((item =>
-      <Card sx={{margin:'12px'}}>
+      <Card sx={{margin:'12px'}} #if ($card.keyProperty) key={item.$card.keyProperty.name} #end>
         <CardContent>
           #if ($card.titleProperty)
           <Typography component="div" variant="h5">
@@ -129,6 +129,8 @@ export const CardListTemplate = () => {
           <EditButton label="$action.label" record={item}/>
           #elseif ($action.type == 'show')
           <ShowButton label="$action.label" record={item}/>
+          #elseif ($action.type == 'delete')
+          <DeleteButton label="$action.label" record={item}/>
           #elseif ($action.type == 'custom')
           <Button label="$action.label"/>
           #end
@@ -149,6 +151,7 @@ export const CardListTemplate = () => {
       <CardActions />
       <ShowButton/>
       <EditButton/>
+      <DeleteButton/>
       <Button/>
       {/*vtl #end */}
     </ListContextProvider>

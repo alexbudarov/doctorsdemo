@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   Button,
   CreateButton,
+  DeleteButton,
   EditButton,
   ExportButton,
   FilterButton,
@@ -15,7 +16,7 @@ import {
   TextInput,
   TopToolbar,
   useList,
-  UseListValue,
+  UseListValue
 } from "react-admin";
 
 export const SimpleCardListTemplate = () => {
@@ -128,6 +129,8 @@ export const SimpleCardListTemplate = () => {
              <EditButton label="$action.label" record={record} onClick={() => {alert('TODO: specify resource or implement custom edit logic')}}/>
              #elseif($action.type == 'show')
              <ShowButton label="$action.label" record={record} onClick={() => {alert('TODO: specify resource or implement custom show logic')}}/>
+             #elseif ($action.type == 'delete')
+             <DeleteButton label="$action.label" record={item} onClick={() => {alert('TODO: specify resource or implement custom deletion logic')}}/>
              #elseif ($action.type == 'custom')
              <Button label="$action.label" onClick={() => {alert('TODO: implement custom action logic')}}/>
              #end
@@ -145,6 +148,7 @@ export const SimpleCardListTemplate = () => {
       <Typography />
       <EditButton />
       <ShowButton />
+      <DeleteButton />
       <Button />
       <Grid/>
       {/*vtl #end */}

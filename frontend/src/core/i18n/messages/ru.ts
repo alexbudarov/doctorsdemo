@@ -1,7 +1,8 @@
 import russianMessages from "@haulmont/ra-language-russian";
 import { TranslationMessages } from "ra-core";
+import { mergeMessages } from "./mergeMessages";
 
-export const ru: TranslationMessages = {
+const messages: TranslationMessages = {
   ...russianMessages,
   resources: {
     Doctor: {
@@ -33,5 +34,10 @@ export const ru: TranslationMessages = {
       OPHTHALMOLOGY: "Офтальмология",
       PSYCHIATRY: "Психиатрия"
     }
-  }  // place for your messages
+  }
 };
+
+export const ru = mergeMessages(
+  messages,
+  [] // place addon messages here
+);

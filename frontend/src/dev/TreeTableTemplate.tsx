@@ -36,6 +36,7 @@ export const TreeTableTemplate = () => {
             #end
   */
   const [pagination, setPagination] = useState<MRT_PaginationState>(/*vtl$paginationState*/);
+  const [rowCount, setRowCount] = useState(0);
   /*vtl #end */
 
   useEffect(() => {
@@ -45,8 +46,12 @@ export const TreeTableTemplate = () => {
       /*vtl
       #if ($table.itemsVariableName)
       setTableData($table.itemsVariableName);
+      #if($table.pagination)
+      setRowCount(${table.itemsVariableName}.length);
+      #end
       #else
       // setTableData();
+      // setRowCount();
       #end
       */
       setIsTableDataLoading(false);
@@ -63,37 +68,45 @@ export const TreeTableTemplate = () => {
     /*vtl #if($table.sortProperties.size() > 0)
     sorting,
     #end*/
-    ]);
+    /*vtl#if ($table.itemsVariableName)
+    $table.itemsVariableName,
+    #end*/
+  ]);
 
-    const tableColumns = useMemo<MRT_ColumnDef/*vtl<${table.itemType}>*/[]>(
-      () => [
-        /*vtl #if ($table.fixedColumn)
-        {
-          accessorKey: '$table.fixedColumn.name',
-          header: '$table.fixedColumn.label',
-          #if($table.fixedColumn.sorted) enableSorting: true, #end
-          #if($table.fixedColumn.filtered) enableColumnFilter: true, #end
-          muiTableHeadCellProps: {
-            sx: {
-              position: "sticky !important",
-              left: 0,
-              top: 0,
-              zIndex: 1,
-              backgroundColor: "white"
-            }
-          },
-          muiTableBodyCellProps: {
-            sx: {
-              position: "sticky !important",
-              left: 0,
-              top: 0,
-              zIndex: 1,
-              backgroundColor: "white"
-            }
-          },
+  const tableColumns = useMemo<MRT_ColumnDef/*vtl<${table.itemType}>*/[]>(
+    () => [
+      /*vtl #if ($table.fixedColumn)
+      {
+        accessorKey: '$table.fixedColumn.name',
+        header: '$table.fixedColumn.label',
+        #if($table.fixedColumn.sorted) enableSorting: true, #end
+        #if($table.fixedColumn.filtered) enableColumnFilter: true, #end
+        muiTableHeadCellProps: {
+          sx: {
+            position: "sticky !important",
+            left: 0,
+            top: 0,
+            zIndex: 1,
+            backgroundColor: "white"
+          }
         },
+        muiTableBodyCellProps: {
+          sx: {
+            position: "sticky !important",
+            left: 0,
+            top: 0,
+            zIndex: 1,
+            backgroundColor: "white"
+          }
+        },
+        #if ($property.dataType == 'object')
+        Cell: ({cell}) => {
+          return JSON.stringify(cell.getValue())
+        }
         #end
-        */
+      },
+      #end
+      */
       /*vtl
       #foreach($property in $table.itemProperties)
       #if (!$property.fixedColumn)
@@ -102,6 +115,11 @@ export const TreeTableTemplate = () => {
         header: '${property.label}',
         enableSorting: #if ($property.sorted) true #else false #end,
         enableColumnFilter: #if ($property.filtered) true #else false #end,
+        #if ($property.dataType == 'object')
+        Cell: ({cell}) => {
+          return JSON.stringify(cell.getValue())
+        }
+        #end
       },
       #end
       #end*/
@@ -139,8 +157,8 @@ export const TreeTableTemplate = () => {
         pagination: {pageSize: $table.rowsPerPage, pageIndex: 0}
         #end*/
       }}
-      /*vtl #if ($table.expandableRow)
       enableExpanding={true}
+      /*vtl #if ($table.expandableRow)
       renderDetailPanel={({ row }) => {
       if (#foreach($expandIfProp in $table.expandIfSet) #if ($velocityCount > 1) || #end row.original.$expandIfProp.name == null #end) return 'Empty';
         return (
@@ -181,7 +199,7 @@ export const TreeTableTemplate = () => {
         /*vtl #if($table.sortProperties.size() > 0)
         sorting,
         #end*/
-        isLoading: isTableDataLoading
+        // isLoading: isTableDataLoading
       }}
       /*vtl
       #if ($table.filterProperties.size() > 0)
@@ -198,6 +216,7 @@ export const TreeTableTemplate = () => {
       /*vtl
       #if ($table.pagination)
       manualPagination
+      rowCount={rowCount}
       onPaginationChange={setPagination}
       #end
       */

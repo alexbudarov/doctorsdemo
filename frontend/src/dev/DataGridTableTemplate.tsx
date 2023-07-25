@@ -1,7 +1,7 @@
 import {
   Button,
   CreateButton,
-  Datagrid, EditButton, ExportButton, FilterButton,
+  Datagrid, DeleteButton, EditButton, ExportButton, FilterButton,
   FilterForm,
   ListContextProvider, Pagination, ShowButton, SimpleShowLayout, SortButton,
   TextField, TextInput, TopToolbar,
@@ -39,7 +39,7 @@ export const DataGridTableTemplate = () => {
     console.log(listContext.sort)
   }, [listContext.sort]);
   /*vtl #end */
-  
+
   return (
     <ListContextProvider value={listContext}>
       {/*vtl #if ($table.filterProperties.size() > 0 || $table.actions.size()>0 ) */}
@@ -137,6 +137,8 @@ export const DataGridTableTemplate = () => {
           <EditButton /*vtl label="$action.label"*/ onClick={() => {alert('TODO: specify resource or implement custom edit logic')}}/>
           {/*vtl #elseif ($action.type == 'show') */}
           <ShowButton /*vtl label="$action.label"*/  onClick={() => {alert('TODO: specify resource or implement custom show logic')}}/>
+          {/*vtl #elseif ($action.type == 'show') */}
+          <DeleteButton /*vtl label="$action.label"*/  onClick={() => {alert('TODO: specify resource or implement custom delete logic')}}/>
           {/*vtl #elseif ($action.type == 'custom') */}
           <Button /*vtl label="$action.label"*/  onClick={() => {alert('TODO: implement custom action logic')}}/>
           {/*vtl #end */}

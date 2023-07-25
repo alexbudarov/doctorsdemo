@@ -38,8 +38,8 @@ export const DoctorList = () => {
   };
 
   const filters = [
-    <TextInput source="firstName" name="firstName" />,
     <TextInput source="lastName" name="lastName" />,
+    <TextInput source="firstName" name="firstName" />,
     <TextInput source="specialty" name="specialty" />,
   ];
 
@@ -48,7 +48,7 @@ export const DoctorList = () => {
       <Datagrid rowClick="show" bulkActionButtons={false}>
         <TextField source="id" sortable={false} />
 
-        <TextField source="firstName" sortable={false} />
+        <TextField source="firstName" />
         <TextField source="lastName" />
         <EnumField source="specialty" enumTypeName="Specialty" enum={Specialty} sortable={false} />
 
