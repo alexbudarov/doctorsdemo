@@ -75,6 +75,6 @@
   },
   "amplicode": {
     "generator": "react-admin:app",
-    "generatorVersion": "0.49.0"
+    "generatorVersion": "0.50.0"
   }
 }

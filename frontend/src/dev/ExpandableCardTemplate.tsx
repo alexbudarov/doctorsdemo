@@ -1,5 +1,5 @@
 import { Button, Card, Collapse, CardActions, CardContent, Typography, Box } from "@mui/material";
-import { CreateButton, DeleteButton, EditButton, ExportButton, ShowButton } from "react-admin";
+import { CreateButton, DeleteButton, EditButton, ExportButton, ShowButton, useTranslate } from "react-admin";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { PropsWithChildren, useState } from "react";
@@ -16,6 +16,15 @@ export const ExpandableCardTemplate = () => {
   #end
   */
   /*vtl #if (false)*/ useState(); /*vtl #end */
+  /*vtl #if ($card.translateLabels)*/
+  const translate = useTranslate();
+    /*vtl #if ($card.graphQLItemType)
+    #set($translationKeyPrefix = "resources.${card.graphQLItemType}.fields")
+    #else
+    #set($translationKeyPrefix = "resources.${card.itemType}")
+    #end
+    */
+  /*vtl #end */
 
   const handleExpandClick = () => {
     setCardExpanded(!cardExpanded);
@@ -75,13 +84,14 @@ export const ExpandableCardTemplate = () => {
         {/*vtl #foreach($property in $card.itemProperties) */}
           {/*vtl #if (!$property.asTitle && !$property.asSubTitle) */}
             {/*vtl #if ($card.labelPosition == 'hidden') */}
-              <Typography mr={1} component="span">{/*vtl {$dataVariable?.${property.name}} */}</Typography>
+              <Typography mr={1} component="span">{/*vtl #if ($property.dataType == 'object') {JSON.stringify($dataVariable?.${property.name})} #else {$dataVariable?.${property.name}} #end */}</Typography>
             {/*vtl #elseif ($card.labelPosition == 'top') */}
-              <Typography variant="caption">{/*vtl ${property.label} */}</Typography>
-              <Typography mb={1} component="p">{/*vtl {$dataVariable?.${property.name}} */}</Typography>
+              <Typography variant="caption">{/*vtl #if ($card.translateLabels) {translate('${translationKeyPrefix}.${property.name}')} #else ${property.label} #end */}</Typography>
+              <Typography mb={1} component="p">{/*vtl #if ($property.dataType == 'object') {JSON.stringify($dataVariable?.${property.name})} #else {$dataVariable?.${property.name}} #end */}</Typography>
             {/*vtl #elseif ($card.labelPosition == 'inline') */}
               <Typography component="p">
-                {/*vtl ${property.label} */}: <Box component="span" sx={{fontWeight: "bold"}}>{/*vtl {$dataVariable?.${property.name}} */}</Box>
+                {/*vtl #if ($card.translateLabels) {translate('${translationKeyPrefix}.${property.name}')}#else ${property.label}#end*/}:&nbsp;
+                <Box component="span" sx={{fontWeight: "bold"}}>{/*vtl #if ($property.dataType == 'object') {JSON.stringify($dataVariable?.${property.name})} #else {$dataVariable?.${property.name}} #end */}</Box>
               </Typography>
             {/*vtl #end */}
           {/*vtl #end */}
